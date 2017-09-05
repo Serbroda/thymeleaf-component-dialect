@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dialect xmlns="http://www.thymeleaf.org/extras/dialect"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.thymeleaf.org/extras/dialect
+	                    http://www.thymeleaf.org/xsd/thymeleaf-extras-dialect-2.1.xsd"
+	prefix="tc"
+	namespace-uri="http://www.morphbit.com/thymeleaf/component"
+	class="de.morphbit.thymeleaf.dialect.ComponentDialect">
+
+    <element-processor name="component" class="de.morphbit.thymeleaf.processor.element.ComponentElementProcessor"></element-processor>
+</dialect>
