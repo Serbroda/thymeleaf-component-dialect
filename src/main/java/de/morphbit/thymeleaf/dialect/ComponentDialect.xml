@@ -8,5 +8,5 @@
 	namespace-uri="http://www.morphbit.com/thymeleaf/component"
 	class="de.morphbit.thymeleaf.dialect.ComponentDialect">
 
-    <element-processor name="component" class="de.morphbit.thymeleaf.processor.element.ComponentElementProcessor"></element-processor>
+    <element-processor name="component" class="de.morphbit.thymeleaf.processor.ComponentElementProcessor"></element-processor>
 </dialect>

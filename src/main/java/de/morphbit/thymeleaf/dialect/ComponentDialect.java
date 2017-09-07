@@ -7,8 +7,8 @@ import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
 import org.thymeleaf.standard.StandardDialect;
 
-import de.morphbit.thymeleaf.processor.element.ComponentAttributeProcessor;
-import de.morphbit.thymeleaf.processor.element.ComponentElementProcessor;
+import de.morphbit.thymeleaf.processor.ComponentAttributeProcessor;
+import de.morphbit.thymeleaf.processor.ComponentElementProcessor;
 
 public class ComponentDialect extends AbstractProcessorDialect {
 
