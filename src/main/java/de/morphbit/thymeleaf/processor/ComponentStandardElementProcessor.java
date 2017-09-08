@@ -14,11 +14,6 @@ public class ComponentStandardElementProcessor
 	
 	private static final String TAG_NAME = "component";
 	
-	private static final String THYMELEAF_FRAGMENT_PREFIX = "th";
-	private static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
-	
-	private static final String REPLACE_CONTENT_TAG = "tc:content";
-	
 	public ComponentStandardElementProcessor(String dialectPrefix) {
 		super(dialectPrefix, TAG_NAME, null);
 	}

@@ -17,10 +17,9 @@ public class ComponentNamedElementProcessor extends AbstractDefaultElementModelP
 
 	private static final int PRECEDENCE = 75;
 
-	private static final String THYMELEAF_FRAGMENT_PREFIX = "th";
-	private static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
-
-	private static final String REPLACE_CONTENT_TAG = "tc:content";
+	protected static final String THYMELEAF_FRAGMENT_PREFIX = "th";
+	protected static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
+	protected static final String REPLACE_CONTENT_TAG = "tc:content";
 
 	private final String fragmentName;
 
