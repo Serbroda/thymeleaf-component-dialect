@@ -1,9 +1,12 @@
 package de.morphbit.thymeleaf.processor;
 
+import java.util.Map;
+
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.ICloseElementTag;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IOpenElementTag;
+import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.model.ITemplateEvent;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -31,11 +34,17 @@ public class TestProcessor extends AbstractDefaultElementModelProcessor {
 	protected void doProcess(ITemplateContext context, IModel model,
 	        IElementModelStructureHandler structureHandler) {
 
+		IProcessableElementTag tag = processElementTag(context, model);
+		Map<String, String> attrMap = processAttribute(context, tag);
+
+		String param = attrMap.get("param");
+
 		IModel base = model.cloneModel();
 		base.remove(0);
 		base.remove(base.size() - 1);
 
-		IModel frag = FragmentHelper.getFragmentModel(context, fragmentName,
+		IModel frag = FragmentHelper.getFragmentModel(context,
+		    fragmentName + (param == null ? "" : "(" + param + ")"),
 		    structureHandler, THYMELEAF_FRAGMENT_PREFIX,
 		    THYMELEAF_FRAGMENT_ATTRIBUTE);
 
