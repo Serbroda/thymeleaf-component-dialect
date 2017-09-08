@@ -26,7 +26,8 @@ public class TestProcessor extends AbstractDefaultElementModelProcessor {
 
 	public TestProcessor(final String dialectPrefix, final String tagName,
 	        final String fragmentName) {
-		super(TemplateMode.HTML, "", tagName, true, null, false, PRECEDENCE);
+		super(TemplateMode.HTML, "", dialectPrefix + "-" + tagName, true, null,
+		    false, PRECEDENCE);
 		this.fragmentName = fragmentName;
 	}
 

@@ -22,9 +22,9 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	public Set<IProcessor> getProcessors(String dialectPrefix) {
 		Set<IProcessor> processors = new HashSet<>();
 		processors.add(new ComponentElementProcessor(dialectPrefix));
-		processors.add(new TestProcessor(dialectPrefix, "comp-panel",
+		processors.add(new TestProcessor(dialectPrefix, "panel",
 		    "components/panel :: panel"));
-		processors.add(new TestProcessor(dialectPrefix, "comp-link",
+		processors.add(new TestProcessor(dialectPrefix, "link",
 		    "components/link :: link"));
 		return processors;
 	}
