@@ -6,30 +6,26 @@ import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
-import org.thymeleaf.templatemode.TemplateMode;
 
 import de.morphbit.thymeleaf.helper.FragmentHelper;
 
-public class ComponentElementProcessor
-        extends AbstractDefaultElementModelProcessor {
-
+public class ComponentStandardElementProcessor
+        extends ComponentNamedElementProcessor {
+	
 	private static final String TAG_NAME = "component";
-	private static final int PRECEDENCE = 75;
-
+	
 	private static final String THYMELEAF_FRAGMENT_PREFIX = "th";
 	private static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
-
+	
 	private static final String REPLACE_CONTENT_TAG = "tc:content";
-
-	public ComponentElementProcessor(final String dialectPrefix) {
-		super(TemplateMode.HTML, dialectPrefix, TAG_NAME, true, null, false,
-		    PRECEDENCE);
+	
+	public ComponentStandardElementProcessor(String dialectPrefix) {
+		super(dialectPrefix, TAG_NAME, null);
 	}
 
-	@Override
-	protected void doProcess(ITemplateContext context, IModel model,
-	        IElementModelStructureHandler structureHandler) {
 
+	@Override
+	protected void doProcess(ITemplateContext context, IModel model, IElementModelStructureHandler structureHandler) {
 		IProcessableElementTag tag = processElementTag(context, model);
 		Map<String, String> attrMap = processAttribute(context, tag);
 
@@ -43,9 +39,6 @@ public class ComponentElementProcessor
 
 		model.reset();
 		model.addModel(mergeModel(frag, base, REPLACE_CONTENT_TAG));
-
 	}
-
-	
 
 }

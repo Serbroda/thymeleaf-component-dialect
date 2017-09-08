@@ -7,8 +7,8 @@ import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
 import org.thymeleaf.standard.StandardDialect;
 
-import de.morphbit.thymeleaf.processor.ComponentElementProcessor;
-import de.morphbit.thymeleaf.processor.TestProcessor;
+import de.morphbit.thymeleaf.processor.ComponentNamedElementProcessor;
+import de.morphbit.thymeleaf.processor.ComponentStandardElementProcessor;
 
 public class ComponentDialect extends AbstractProcessorDialect {
 
@@ -21,10 +21,10 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	@Override
 	public Set<IProcessor> getProcessors(String dialectPrefix) {
 		Set<IProcessor> processors = new HashSet<>();
-		processors.add(new ComponentElementProcessor(dialectPrefix));
-		processors.add(new TestProcessor(dialectPrefix, "panel",
+		processors.add(new ComponentStandardElementProcessor(dialectPrefix));
+		processors.add(new ComponentNamedElementProcessor(dialectPrefix, "panel",
 		    "components/panel :: panel"));
-		processors.add(new TestProcessor(dialectPrefix, "link",
+		processors.add(new ComponentNamedElementProcessor(dialectPrefix, "link",
 		    "components/link :: link"));
 		return processors;
 	}

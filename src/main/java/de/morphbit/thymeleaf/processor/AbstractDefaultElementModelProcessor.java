@@ -7,7 +7,9 @@ import java.util.Objects;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.model.IAttribute;
+import org.thymeleaf.model.ICloseElementTag;
 import org.thymeleaf.model.IModel;
+import org.thymeleaf.model.IOpenElementTag;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.model.ITemplateEvent;
 import org.thymeleaf.processor.element.AbstractElementModelProcessor;
@@ -66,6 +68,46 @@ public abstract class AbstractDefaultElementModelProcessor
 		}
 
 		return attMap;
+	}
+	
+	protected IModel mergeModel(IModel fragment, IModel body, final String replaceTag) {
+		IModel mergedModel = insert(fragment, body, replaceTag);
+		mergedModel = remove(mergedModel, replaceTag);
+		mergedModel = remove(mergedModel, replaceTag);
+		return mergedModel;
+	}
+
+	private IModel insert(IModel fragment, IModel body, final String replaceTag) {
+		IModel mergedModel = fragment.cloneModel();
+		int size = mergedModel.size();
+		ITemplateEvent event = null;
+		for (int i = 0; i < size; i++) {
+			event = mergedModel.get(i);
+			if (event instanceof IOpenElementTag) {
+				if (event.toString().contains(replaceTag)) {
+					mergedModel.insertModel(i, body);
+					break;
+				}
+			}
+		}
+		return mergedModel;
+	}
+
+	private IModel remove(IModel fragment, final String replaceTag) {
+		IModel mergedModel = fragment.cloneModel();
+		int size = mergedModel.size();
+		ITemplateEvent event = null;
+		for (int i = 0; i < size; i++) {
+			event = mergedModel.get(i);
+			if (event instanceof IOpenElementTag
+			        || event instanceof ICloseElementTag) {
+				if (event.toString().contains(replaceTag)) {
+					mergedModel.remove(i);
+					break;
+				}
+			}
+		}
+		return mergedModel;
 	}
 
 	private void processDefaultAttribute(final ITemplateContext context,

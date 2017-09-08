@@ -13,7 +13,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import de.morphbit.thymeleaf.helper.FragmentHelper;
 
-public class TestProcessor extends AbstractDefaultElementModelProcessor {
+public class ComponentNamedElementProcessor extends AbstractDefaultElementModelProcessor {
 
 	private static final int PRECEDENCE = 75;
 
@@ -24,7 +24,7 @@ public class TestProcessor extends AbstractDefaultElementModelProcessor {
 
 	private final String fragmentName;
 
-	public TestProcessor(final String dialectPrefix, final String tagName,
+	public ComponentNamedElementProcessor(final String dialectPrefix, final String tagName,
 	        final String fragmentName) {
 		super(TemplateMode.HTML, "", dialectPrefix + "-" + tagName, true, null,
 		    false, PRECEDENCE);
