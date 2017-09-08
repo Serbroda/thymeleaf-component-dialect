@@ -19,6 +19,11 @@ public class ComponentElementProcessor
 	private static final String TAG_NAME = "component";
 	private static final int PRECEDENCE = 20;
 
+	private static final String THYMELEAF_FRAGMENT_PREFIX = "th";
+	private static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
+
+	private static final String REPLACE_CONTENT_TAG = "tc:content";
+
 	public ComponentElementProcessor(final String dialectPrefix) {
 		super(TemplateMode.HTML, dialectPrefix, TAG_NAME, true, null, false,
 		    PRECEDENCE);
@@ -36,7 +41,8 @@ public class ComponentElementProcessor
 		base.remove(base.size() - 1);
 
 		IModel frag = FragmentHelper.getFragmentModel(context,
-		    attrMap.get("name"), structureHandler, "th", "fragment");
+		    attrMap.get("name"), structureHandler, THYMELEAF_FRAGMENT_PREFIX,
+		    THYMELEAF_FRAGMENT_ATTRIBUTE);
 
 		model.reset();
 		model.addModel(mergeModel(frag, base));
@@ -57,7 +63,7 @@ public class ComponentElementProcessor
 		for (int i = 0; i < size; i++) {
 			event = mergedModel.get(i);
 			if (event instanceof IOpenElementTag) {
-				if (event.toString().contains("tc:content")) {
+				if (event.toString().contains(REPLACE_CONTENT_TAG)) {
 					mergedModel.insertModel(i, body);
 					break;
 				}
@@ -74,7 +80,7 @@ public class ComponentElementProcessor
 			event = mergedModel.get(i);
 			if (event instanceof IOpenElementTag
 			        || event instanceof ICloseElementTag) {
-				if (event.toString().contains("tc:content")) {
+				if (event.toString().contains(REPLACE_CONTENT_TAG)) {
 					mergedModel.remove(i);
 					break;
 				}
