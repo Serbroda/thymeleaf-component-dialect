@@ -1,6 +1,10 @@
 package de.morphbit.thymeleaf.processor;
 
+import java.util.Map;
+import java.util.Set;
+
 import org.thymeleaf.context.ITemplateContext;
+import org.thymeleaf.engine.TemplateManager;
 import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IProcessableElementTag;
@@ -31,6 +35,12 @@ public class ComponentElementProcessor extends AbstractElementModelProcessor {
 	        IElementModelStructureHandler structureHandler) {
 
 		IProcessableElementTag self = getSelfElement(context, model);
+
+		TemplateManager manager =
+		        new TemplateManager(context.getConfiguration());
+		manager.parseString(null, self.toString(), 0, 0, TemplateMode.HTML,
+		    false);
+
 		String nameAttr = self.getAttributeValue("name");
 
 		final IStandardExpressionParser parser = StandardExpressions
@@ -50,13 +60,31 @@ public class ComponentElementProcessor extends AbstractElementModelProcessor {
 		            fragmentExpression,
 		            StandardExpressionExecutionContext.NORMAL);
 
+		final String templateName =
+		        FragmentExpression.resolveTemplateName(fragment);
+		final Set<String> markupSelectors =
+		        FragmentExpression.resolveFragments(fragment);
+		final Map<String, Object> nameFragmentParameters =
+		        fragment.getFragmentParameters();
+
+		if (nameFragmentParameters != null) {
+
+			if (fragment.hasSyntheticParameters()) {
+				// We cannot allow synthetic parameters because there is no
+				// way to specify them at the template
+				// engine execution!
+				throw new IllegalArgumentException(
+				    "Parameters in a view specification must be named (non-synthetic): '"
+				            + nameAttr + "'");
+			}
+
+			// context.setVariables(nameFragmentParameters);
+
+		}
+
+		// Model
 		IModel fragmentModel = FragmentHelper.getFragmentModel(context,
 		    nameAttr, structureHandler, "th", "fragment");
-
-		FragmentExpression ex =
-		        FragmentExpression.parseFragmentExpression(nameAttr);
-		FragmentExpression.createExecutedFragmentExpression(context, null,
-		    null);
 
 		System.out.println(fragmentModel);
 		structureHandler.setTemplateData(null);
