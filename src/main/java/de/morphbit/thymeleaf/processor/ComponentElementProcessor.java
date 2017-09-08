@@ -17,7 +17,7 @@ public class ComponentElementProcessor
         extends AbstractDefaultElementModelProcessor {
 
 	private static final String TAG_NAME = "component";
-	private static final int PRECEDENCE = 20;
+	private static final int PRECEDENCE = 75;
 
 	private static final String THYMELEAF_FRAGMENT_PREFIX = "th";
 	private static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
