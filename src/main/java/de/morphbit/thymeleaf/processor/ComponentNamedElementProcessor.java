@@ -3,11 +3,8 @@ package de.morphbit.thymeleaf.processor;
 import java.util.Map;
 
 import org.thymeleaf.context.ITemplateContext;
-import org.thymeleaf.model.ICloseElementTag;
 import org.thymeleaf.model.IModel;
-import org.thymeleaf.model.IOpenElementTag;
 import org.thymeleaf.model.IProcessableElementTag;
-import org.thymeleaf.model.ITemplateEvent;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
 import org.thymeleaf.templatemode.TemplateMode;
 
@@ -49,48 +46,8 @@ public class ComponentNamedElementProcessor extends AbstractDefaultElementModelP
 		    THYMELEAF_FRAGMENT_ATTRIBUTE);
 
 		model.reset();
-		model.addModel(mergeModel(frag, base));
-
+		model.addModel(mergeModel(frag, base, REPLACE_CONTENT_TAG));
 	}
 
-	private IModel mergeModel(IModel fragment, IModel body) {
-		IModel mergedModel = insert(fragment, body);
-		mergedModel = remove(mergedModel);
-		mergedModel = remove(mergedModel);
-		return mergedModel;
-	}
-
-	private IModel insert(IModel fragment, IModel body) {
-		IModel mergedModel = fragment.cloneModel();
-		int size = mergedModel.size();
-		ITemplateEvent event = null;
-		for (int i = 0; i < size; i++) {
-			event = mergedModel.get(i);
-			if (event instanceof IOpenElementTag) {
-				if (event.toString().contains(REPLACE_CONTENT_TAG)) {
-					mergedModel.insertModel(i, body);
-					break;
-				}
-			}
-		}
-		return mergedModel;
-	}
-
-	private IModel remove(IModel fragment) {
-		IModel mergedModel = fragment.cloneModel();
-		int size = mergedModel.size();
-		ITemplateEvent event = null;
-		for (int i = 0; i < size; i++) {
-			event = mergedModel.get(i);
-			if (event instanceof IOpenElementTag
-			        || event instanceof ICloseElementTag) {
-				if (event.toString().contains(REPLACE_CONTENT_TAG)) {
-					mergedModel.remove(i);
-					break;
-				}
-			}
-		}
-		return mergedModel;
-	}
 
 }
