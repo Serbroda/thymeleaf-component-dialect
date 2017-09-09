@@ -35,7 +35,10 @@ public class ComponentNamedElementProcessor extends AbstractComponentElementProc
 
 		IModel base = model.cloneModel();
 		base.remove(0);
-		base.remove(base.size() - 1);
+		
+		if(base.size() > 1) {
+			base.remove(base.size() - 1);
+		}
 
 		IModel frag = FragmentHelper.getFragmentModel(context, fragmentName + (param == null ? "" : "(" + param + ")"),
 				structureHandler, THYMELEAF_FRAGMENT_PREFIX, THYMELEAF_FRAGMENT_ATTRIBUTE);

@@ -26,7 +26,10 @@ public class ComponentStandardElementProcessor
 
 		IModel base = model.cloneModel();
 		base.remove(0);
-		base.remove(base.size() - 1);
+		
+		if(base.size() > 1) {
+			base.remove(base.size() - 1);
+		}
 
 		IModel frag = FragmentHelper.getFragmentModel(context,
 		    attrMap.get("name"), structureHandler, THYMELEAF_FRAGMENT_PREFIX,
