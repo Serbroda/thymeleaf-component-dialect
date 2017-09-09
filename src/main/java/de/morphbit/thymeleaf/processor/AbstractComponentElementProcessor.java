@@ -23,12 +23,12 @@ import org.thymeleaf.standard.processor.StandardDefaultAttributesTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.EscapedAttributeUtils;
 
-public abstract class AbstractDefaultElementModelProcessor
+public abstract class AbstractComponentElementProcessor
         extends AbstractElementModelProcessor {
 
 	private static final String DYNAMIC_ATT_PREFIX = "th:";
 
-	public AbstractDefaultElementModelProcessor(TemplateMode templateMode,
+	public AbstractComponentElementProcessor(TemplateMode templateMode,
 	        String dialectPrefix, String elementName, boolean prefixElementName,
 	        String attributeName, boolean prefixAttributeName, int precedence) {
 		super(templateMode, dialectPrefix, elementName, prefixElementName,
