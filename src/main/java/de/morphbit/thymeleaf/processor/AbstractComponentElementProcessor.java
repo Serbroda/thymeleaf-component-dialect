@@ -46,9 +46,12 @@ public abstract class AbstractComponentElementProcessor
 	protected IProcessableElementTag processElementTag(ITemplateContext context,
 	        IModel model) {
 		ITemplateEvent firstEvent = model.get(0);
+		String fixedFirstEvent = firstEvent.toString().trim().toLowerCase().replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
+		
 		for (IProcessableElementTag tag : context.getElementStack()) {
-			if (tag.toString().trim()
-			    .equalsIgnoreCase(firstEvent.toString().trim())) {
+			String fixedTag = tag.toString().trim().toLowerCase().replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
+			
+			if (fixedTag.equals(fixedFirstEvent)) {
 				return tag;
 			}
 		}
