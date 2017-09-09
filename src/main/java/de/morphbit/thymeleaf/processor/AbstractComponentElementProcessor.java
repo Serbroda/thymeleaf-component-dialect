@@ -1,8 +1,10 @@
 package de.morphbit.thymeleaf.processor;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
@@ -13,6 +15,7 @@ import org.thymeleaf.model.IOpenElementTag;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.model.ITemplateEvent;
 import org.thymeleaf.processor.element.AbstractElementModelProcessor;
+import org.thymeleaf.processor.element.IElementModelStructureHandler;
 import org.thymeleaf.standard.expression.FragmentExpression;
 import org.thymeleaf.standard.expression.IStandardExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
@@ -23,41 +26,49 @@ import org.thymeleaf.standard.processor.StandardDefaultAttributesTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.util.EscapedAttributeUtils;
 
-public abstract class AbstractComponentElementProcessor
-        extends AbstractElementModelProcessor {
+import de.morphbit.thymeleaf.helper.WithHelper;
+
+public abstract class AbstractComponentElementProcessor extends AbstractElementModelProcessor {
 
 	private static final String DYNAMIC_ATT_PREFIX = "th:";
 
-	public AbstractComponentElementProcessor(TemplateMode templateMode,
-	        String dialectPrefix, String elementName, boolean prefixElementName,
-	        String attributeName, boolean prefixAttributeName, int precedence) {
-		super(templateMode, dialectPrefix, elementName, prefixElementName,
-		    attributeName, prefixAttributeName, precedence);
+	protected static final String THYMELEAF_FRAGMENT_PREFIX = "th";
+	protected static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
+	protected static final String REPLACE_CONTENT_TAG = "tc:content";
+
+	public AbstractComponentElementProcessor(String dialectPrefix, String elementName, int precedence) {
+		super(TemplateMode.HTML, dialectPrefix, elementName, true, null, false, precedence);
 	}
 
-	protected String processModelAsString(IModel model) {
-		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < model.size(); i++) {
-			builder.append(model.get(i));
-		}
-		return builder.toString();
-	}
-
-	protected IProcessableElementTag processElementTag(ITemplateContext context,
-	        IModel model) {
+	protected IProcessableElementTag processElementTag(ITemplateContext context, IModel model) {
 		ITemplateEvent firstEvent = model.get(0);
 		String fixedFirstEvent = normalizeTag(firstEvent.toString());
-		
+
 		for (IProcessableElementTag tag : context.getElementStack()) {
 			String fixedTag = normalizeTag(tag.toString());
-			
+
 			if (fixedTag.equals(fixedFirstEvent)) {
 				return tag;
 			}
 		}
 		return null;
 	}
-	
+
+	protected void processVariables(Map<String, String> attrMap, ITemplateContext context,
+			IElementModelStructureHandler structureHandler) {
+		processVariables(attrMap, context, structureHandler, new HashSet<>());
+	}
+
+	protected void processVariables(Map<String, String> attrMap, ITemplateContext context,
+			IElementModelStructureHandler structureHandler, Set<String> excludeAttr) {
+		for (java.util.Map.Entry<String, String> entry : attrMap.entrySet()) {
+			if (excludeAttr.contains(entry.getKey()) || entry.getKey().startsWith(this.getDialectPrefix() + ":")) {
+				continue;
+			}
+			WithHelper.processWith(context, entry.getKey() + "=" + entry.getValue(), structureHandler);
+		}
+	}
+
 	private String normalizeTag(final String tag) {
 		String normalized = tag.trim().toLowerCase();
 		normalized = normalized.replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
@@ -66,8 +77,7 @@ public abstract class AbstractComponentElementProcessor
 		return normalized;
 	}
 
-	protected Map<String, String> processAttribute(
-	        final ITemplateContext context, IProcessableElementTag tag) {
+	protected Map<String, String> processAttribute(final ITemplateContext context, IProcessableElementTag tag) {
 		Map<String, String> attMap = new HashMap<>();
 		for (final IAttribute attribute : tag.getAllAttributes()) {
 			String completeName = attribute.getAttributeCompleteName();
@@ -80,7 +90,7 @@ public abstract class AbstractComponentElementProcessor
 
 		return attMap;
 	}
-	
+
 	protected IModel mergeModel(IModel fragment, IModel body, final String replaceTag) {
 		IModel mergedModel = insert(fragment, body, replaceTag);
 		mergedModel = remove(mergedModel, replaceTag);
@@ -110,8 +120,7 @@ public abstract class AbstractComponentElementProcessor
 		ITemplateEvent event = null;
 		for (int i = 0; i < size; i++) {
 			event = mergedModel.get(i);
-			if (event instanceof IOpenElementTag
-			        || event instanceof ICloseElementTag) {
+			if (event instanceof IOpenElementTag || event instanceof ICloseElementTag) {
 				if (event.toString().contains(replaceTag)) {
 					mergedModel.remove(i);
 					break;
@@ -121,18 +130,15 @@ public abstract class AbstractComponentElementProcessor
 		return mergedModel;
 	}
 
-	private void processDefaultAttribute(final ITemplateContext context,
-	        final IProcessableElementTag tag, final IAttribute attribute,
-	        Map<String, String> attMap) {
+	private void processDefaultAttribute(final ITemplateContext context, final IProcessableElementTag tag,
+			final IAttribute attribute, Map<String, String> attMap) {
 
 		try {
 
-			final String attributeValue =
-			        EscapedAttributeUtils.unescapeAttribute(
-			            context.getTemplateMode(), attribute.getValue());
+			final String attributeValue = EscapedAttributeUtils.unescapeAttribute(context.getTemplateMode(),
+					attribute.getValue());
 
-			final String newAttributeName =
-			        attribute.getAttributeCompleteName().substring(3);
+			final String newAttributeName = attribute.getAttributeCompleteName().substring(3);
 
 			if (newAttributeName.trim().isEmpty()) {
 				return;
@@ -141,9 +147,8 @@ public abstract class AbstractComponentElementProcessor
 			/*
 			 * Obtain the parser
 			 */
-			final IStandardExpressionParser expressionParser =
-			        StandardExpressions
-			            .getExpressionParser(context.getConfiguration());
+			final IStandardExpressionParser expressionParser = StandardExpressions
+					.getExpressionParser(context.getConfiguration());
 
 			/*
 			 * Execute the expression, handling nulls in a way consistent with
@@ -152,8 +157,7 @@ public abstract class AbstractComponentElementProcessor
 			final Object expressionResult;
 			if (attributeValue != null) {
 
-				final IStandardExpression expression = expressionParser
-				    .parseExpression(context, attributeValue);
+				final IStandardExpression expression = expressionParser.parseExpression(context, attributeValue);
 
 				if (expression != null) {
 					if (expression instanceof FragmentExpression) {
@@ -164,15 +168,12 @@ public abstract class AbstractComponentElementProcessor
 						// save a call to resource.exists() which might be
 						// costly.
 
-						final FragmentExpression.ExecutedFragmentExpression executedFragmentExpression =
-						        FragmentExpression
-						            .createExecutedFragmentExpression(context,
-						                (FragmentExpression) expression,
-						                StandardExpressionExecutionContext.NORMAL);
+						final FragmentExpression.ExecutedFragmentExpression executedFragmentExpression = FragmentExpression
+								.createExecutedFragmentExpression(context, (FragmentExpression) expression,
+										StandardExpressionExecutionContext.NORMAL);
 
-						expressionResult = FragmentExpression
-						    .resolveExecutedFragmentExpression(context,
-						        executedFragmentExpression, true);
+						expressionResult = FragmentExpression.resolveExecutedFragmentExpression(context,
+								executedFragmentExpression, true);
 					} else {
 						expressionResult = expression.execute(context);
 					}
@@ -192,8 +193,7 @@ public abstract class AbstractComponentElementProcessor
 				return;
 			}
 
-			final String newAttributeValue =
-			        Objects.toString(expressionResult, null);
+			final String newAttributeValue = Objects.toString(expressionResult, null);
 
 			/*
 			 * Set the new value, removing the attribute completely if the
@@ -220,12 +220,9 @@ public abstract class AbstractComponentElementProcessor
 			}
 			throw e;
 		} catch (final Exception e) {
-			throw new TemplateProcessingException(
-			    "Error during execution of processor '"
-			            + StandardDefaultAttributesTagProcessor.class.getName()
-			            + "'",
-			    tag.getTemplateName(), attribute.getLine(), attribute.getCol(),
-			    e);
+			throw new TemplateProcessingException("Error during execution of processor '"
+					+ StandardDefaultAttributesTagProcessor.class.getName() + "'", tag.getTemplateName(),
+					attribute.getLine(), attribute.getCol(), e);
 		}
 
 	}

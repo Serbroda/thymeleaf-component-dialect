@@ -1,12 +1,13 @@
 package de.morphbit.thymeleaf.processor;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
-import org.thymeleaf.templatemode.TemplateMode;
 
 import de.morphbit.thymeleaf.helper.FragmentHelper;
 
@@ -14,15 +15,13 @@ public class ComponentNamedElementProcessor extends AbstractComponentElementProc
 
 	private static final int PRECEDENCE = 75;
 
-	protected static final String THYMELEAF_FRAGMENT_PREFIX = "th";
-	protected static final String THYMELEAF_FRAGMENT_ATTRIBUTE = "fragment";
-	protected static final String REPLACE_CONTENT_TAG = "tc:content";
-
 	private final String fragmentName;
+	private final Set<String> excludeAttributes = new HashSet<>(); 
 
 	public ComponentNamedElementProcessor(final String dialectPrefix, final String tagName, final String fragmentName) {
-		super(TemplateMode.HTML, dialectPrefix, tagName, true, null, false, PRECEDENCE);
+		super(dialectPrefix, tagName, PRECEDENCE);
 		this.fragmentName = fragmentName;
+		excludeAttributes.add("params");
 	}
 
 	@Override
@@ -45,6 +44,9 @@ public class ComponentNamedElementProcessor extends AbstractComponentElementProc
 
 		model.reset();
 		model.addModel(mergeModel(frag, base, REPLACE_CONTENT_TAG));
+		
+		processVariables(attrMap, context, structureHandler, excludeAttributes);
+		
 	}
 
 }
