@@ -10,7 +10,7 @@ import org.thymeleaf.templatemode.TemplateMode;
 
 import de.morphbit.thymeleaf.helper.FragmentHelper;
 
-public class ComponentNamedElementProcessor extends AbstractDefaultElementModelProcessor {
+public class ComponentNamedElementProcessor extends AbstractComponentElementProcessor {
 
 	private static final int PRECEDENCE = 75;
 
@@ -20,34 +20,28 @@ public class ComponentNamedElementProcessor extends AbstractDefaultElementModelP
 
 	private final String fragmentName;
 
-	public ComponentNamedElementProcessor(final String dialectPrefix, final String tagName,
-	        final String fragmentName) {
-		super(TemplateMode.HTML, "", dialectPrefix + "-" + tagName, true, null,
-		    false, PRECEDENCE);
+	public ComponentNamedElementProcessor(final String dialectPrefix, final String tagName, final String fragmentName) {
+		super(TemplateMode.HTML, dialectPrefix, tagName, true, null, false, PRECEDENCE);
 		this.fragmentName = fragmentName;
 	}
 
 	@Override
-	protected void doProcess(ITemplateContext context, IModel model,
-	        IElementModelStructureHandler structureHandler) {
+	protected void doProcess(ITemplateContext context, IModel model, IElementModelStructureHandler structureHandler) {
 
 		IProcessableElementTag tag = processElementTag(context, model);
 		Map<String, String> attrMap = processAttribute(context, tag);
 
-		String param = attrMap.get("param");
+		String param = attrMap.get("params");
 
 		IModel base = model.cloneModel();
 		base.remove(0);
 		base.remove(base.size() - 1);
 
-		IModel frag = FragmentHelper.getFragmentModel(context,
-		    fragmentName + (param == null ? "" : "(" + param + ")"),
-		    structureHandler, THYMELEAF_FRAGMENT_PREFIX,
-		    THYMELEAF_FRAGMENT_ATTRIBUTE);
+		IModel frag = FragmentHelper.getFragmentModel(context, fragmentName + (param == null ? "" : "(" + param + ")"),
+				structureHandler, THYMELEAF_FRAGMENT_PREFIX, THYMELEAF_FRAGMENT_ATTRIBUTE);
 
 		model.reset();
 		model.addModel(mergeModel(frag, base, REPLACE_CONTENT_TAG));
 	}
-
 
 }
