@@ -46,16 +46,24 @@ public abstract class AbstractComponentElementProcessor
 	protected IProcessableElementTag processElementTag(ITemplateContext context,
 	        IModel model) {
 		ITemplateEvent firstEvent = model.get(0);
-		String fixedFirstEvent = firstEvent.toString().trim().toLowerCase().replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
+		String fixedFirstEvent = normalizeTag(firstEvent.toString());
 		
 		for (IProcessableElementTag tag : context.getElementStack()) {
-			String fixedTag = tag.toString().trim().toLowerCase().replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
+			String fixedTag = normalizeTag(tag.toString());
 			
 			if (fixedTag.equals(fixedFirstEvent)) {
 				return tag;
 			}
 		}
 		return null;
+	}
+	
+	private String normalizeTag(final String tag) {
+		String normalized = tag.trim().toLowerCase();
+		normalized = normalized.replaceAll("[^<]" + this.getDialectPrefix() + ":[\\d|\\w]*=\"[^\"]*\"", "");
+		normalized = normalized.replaceAll("\\n", "");
+		normalized = normalized.replaceAll("\\s", "");
+		return normalized;
 	}
 
 	protected Map<String, String> processAttribute(
