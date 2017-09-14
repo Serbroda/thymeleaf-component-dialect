@@ -9,6 +9,7 @@ import org.thymeleaf.standard.StandardDialect;
 
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
 import de.morphbit.thymeleaf.processor.ComponentNamedElementProcessor;
+import de.morphbit.thymeleaf.processor.OnceAttributeTagProcessor;
 
 public class ComponentDialect extends AbstractProcessorDialect {
 
@@ -28,10 +29,12 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	@Override
 	public Set<IProcessor> getProcessors(String dialectPrefix) {
 		Set<IProcessor> processors = new HashSet<>();
+		processors.add(new OnceAttributeTagProcessor(dialectPrefix));
+
 		if (this.components != null) {
 			for (ThymeleafComponent comp : this.components) {
-				processors.add(
-						new ComponentNamedElementProcessor(dialectPrefix, comp.getName(), comp.getFragmentTemplate()));
+				processors.add(new ComponentNamedElementProcessor(dialectPrefix,
+				    comp.getName(), comp.getFragmentTemplate()));
 			}
 		}
 		return processors;
