@@ -81,7 +81,11 @@ public class ComponentNamedElementProcessor extends AbstractElementModelProcesso
             if (excludeAttr.contains(entry.getKey()) || entry.getKey().startsWith(this.getDialectPrefix() + ":")) {
                 continue;
             }
-            WithHelper.processWith(context, entry.getKey() + "=" + entry.getValue(), structureHandler);
+            String val = entry.getValue();
+            if(val == null) {
+            	val = "${true}";
+            }
+            WithHelper.processWith(context, entry.getKey() + "=" + val, structureHandler);
         }
     }
 
