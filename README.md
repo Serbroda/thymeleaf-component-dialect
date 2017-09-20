@@ -40,7 +40,7 @@ public ComponentDialect componentDialect() {
 }
 ```
 
-The component dialect automatically searches for all `th:fragment` attributes and registers them as components. Optinally you can set a name with `tc:selector`.
+The component dialect automatically searches for all `th:fragment` attributes and registers them as components. Optionally you can set a name with `tc:selector`.
 
 
 Usage
