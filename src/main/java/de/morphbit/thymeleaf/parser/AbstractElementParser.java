@@ -1,4 +1,4 @@
-package de.morphbit.thymeleaf.service.impl;
+package de.morphbit.thymeleaf.parser;
 
 import java.io.IOException;
 import java.io.InputStream;

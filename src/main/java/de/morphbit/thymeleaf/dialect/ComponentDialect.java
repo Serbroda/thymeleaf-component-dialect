@@ -9,9 +9,9 @@ import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
 
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
+import de.morphbit.thymeleaf.parser.IThymeleafComponentParser;
 import de.morphbit.thymeleaf.processor.ComponentNamedElementProcessor;
 import de.morphbit.thymeleaf.processor.OnceAttributeTagProcessor;
-import de.morphbit.thymeleaf.service.IThymeleafComponentParser;
 
 public class ComponentDialect extends AbstractProcessorDialect {
 

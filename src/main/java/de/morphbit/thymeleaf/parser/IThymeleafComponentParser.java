@@ -1,4 +1,4 @@
-package de.morphbit.thymeleaf.service;
+package de.morphbit.thymeleaf.parser;
 
 import java.util.Set;
 

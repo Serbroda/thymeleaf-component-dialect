@@ -1,4 +1,4 @@
-package de.morphbit.thymeleaf.service.impl;
+package de.morphbit.thymeleaf.parser;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,7 +9,6 @@ import org.thymeleaf.standard.StandardDialect;
 import de.morphbit.thymeleaf.dialect.ComponentDialect;
 import de.morphbit.thymeleaf.helper.ResourcePathFinder;
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
-import de.morphbit.thymeleaf.service.IThymeleafComponentParser;
 
 public class StandardThymeleafComponentParser extends AbstractElementParser
         implements IThymeleafComponentParser {
