@@ -14,6 +14,8 @@ import de.morphbit.thymeleaf.processor.OnceAttributeTagProcessor;
 public class ComponentDialect extends AbstractProcessorDialect {
 
 	public static final String NAME = "Component Dialect";
+	public static final String PREFIX = "tc";
+	public static final int PRECEDENCE = 1000;
 
 	private final Set<ThymeleafComponent> components;
 
@@ -22,7 +24,7 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	}
 
 	public ComponentDialect(Set<ThymeleafComponent> components) {
-		super(NAME, "tc", StandardDialect.PROCESSOR_PRECEDENCE);
+		super(NAME, PREFIX, PRECEDENCE);
 		this.components = components;
 	}
 
