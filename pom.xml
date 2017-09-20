@@ -4,7 +4,7 @@
 
     <groupId>de.morphbit</groupId>
     <artifactId>thymeleaf-component-dialect</artifactId>
-    <version>0.0.1-alpha-SNAPSHOT</version>
+    <version>0.0.2-alpha-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>thymeleaf-component-dialect</name>
