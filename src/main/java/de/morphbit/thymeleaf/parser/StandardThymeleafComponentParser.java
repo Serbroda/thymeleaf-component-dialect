@@ -36,6 +36,17 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 	private final String templatePrefix;
 	private final String templateSuffix;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param templatePrefix
+	 *            Template prefix (e.g. templates/)
+	 * @param templateSuffix
+	 *            Template suffix (e.g. .html)
+	 * @param directory
+	 *            Subdirectory of param templatePrefix to find components in
+	 *            (e.g. components)
+	 */
 	public StandardThymeleafComponentParser(String templatePrefix,
 	        String templateSuffix, String directory) {
 		super(ComponentDialect.PREFIX);

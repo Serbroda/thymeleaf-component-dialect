@@ -22,5 +22,10 @@ import de.morphbit.thymeleaf.model.ThymeleafComponent;
 
 public interface IThymeleafComponentParser {
 
+	/**
+	 * Parses thymeleaf components
+	 * 
+	 * @return List of thymeleaf components
+	 */
 	Set<ThymeleafComponent> parse();
 }

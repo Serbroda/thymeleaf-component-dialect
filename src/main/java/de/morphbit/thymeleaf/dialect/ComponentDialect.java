@@ -29,6 +29,12 @@ import de.morphbit.thymeleaf.parser.IThymeleafComponentParser;
 import de.morphbit.thymeleaf.processor.ComponentNamedElementProcessor;
 import de.morphbit.thymeleaf.processor.OnceAttributeTagProcessor;
 
+/**
+ * A dialect for creating reusable composite components with thymeleaf
+ * 
+ * @author Danny Rottstegge
+ *
+ */
 public class ComponentDialect extends AbstractProcessorDialect {
 
 	public static final String NAME = "Component Dialect";
@@ -38,15 +44,28 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	private final Set<ThymeleafComponent> components;
 	private final List<IThymeleafComponentParser> parsers = new ArrayList<>();
 
+	/**
+	 * Constructor
+	 */
 	public ComponentDialect() {
 		this(null);
 	}
 
+	/**
+	 * Constructor, adding components
+	 * 
+	 * @param components
+	 *            Thymeleaf components
+	 */
 	public ComponentDialect(Set<ThymeleafComponent> components) {
 		super(NAME, PREFIX, PRECEDENCE);
 		this.components = components;
 	}
 
+	/**
+	 * Returns the dialect's processors. It will also add thymeleaf components
+	 * processors parsed from added IThymeleafComponentParser
+	 */
 	@Override
 	public Set<IProcessor> getProcessors(String dialectPrefix) {
 		Set<IProcessor> processors = new HashSet<>();
@@ -67,6 +86,11 @@ public class ComponentDialect extends AbstractProcessorDialect {
 		return processors;
 	}
 
+	/**
+	 * Get components from parsers
+	 * 
+	 * @return Thymeleaf components
+	 */
 	private Set<ThymeleafComponent> parseComponents() {
 		Set<ThymeleafComponent> parsedComponents = new HashSet<>();
 		for (IThymeleafComponentParser parser : this.parsers) {
@@ -76,6 +100,12 @@ public class ComponentDialect extends AbstractProcessorDialect {
 		return parsedComponents;
 	}
 
+	/**
+	 * Add parser to the list of parsers
+	 * 
+	 * @param parser
+	 *            Thymeleaf component parser
+	 */
 	public void addParser(IThymeleafComponentParser parser) {
 		this.parsers.add(parser);
 	}

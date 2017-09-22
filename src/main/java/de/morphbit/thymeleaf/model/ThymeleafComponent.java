@@ -26,18 +26,43 @@ public class ThymeleafComponent {
 		this.fragmentTemplate = fragmentTemplate;
 	}
 
+	/**
+	 * Returns the name of the component (e.g. panel)
+	 * 
+	 * @return Component name
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**
+	 * Sets the name of the component (e.g. panel). This will be uses as the
+	 * selector in the html file like.
+	 * 
+	 * @param name
+	 *            Component name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**
+	 * Returns the thymeleaf fragment template
+	 * 
+	 * @return Fragment template
+	 */
 	public String getFragmentTemplate() {
 		return fragmentTemplate;
 	}
 
+	/**
+	 * Sets the thymeleaf fragment template (e.g components/panel :: panel). The
+	 * pattern is without the fragments parameters, so 'components/panel ::
+	 * panel(title)' will throw an error.
+	 * 
+	 * @param fragmentTemplate
+	 *            Fragment template
+	 */
 	public void setFragmentTemplate(String fragmentTemplate) {
 		this.fragmentTemplate = fragmentTemplate;
 	}

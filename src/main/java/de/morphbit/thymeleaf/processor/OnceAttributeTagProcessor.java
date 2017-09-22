@@ -29,6 +29,12 @@ public class OnceAttributeTagProcessor
 	public static final int PRECEDENCE = 300;
 	public static final String ATTR_NAME = "once";
 
+	/**
+	 * Constructor
+	 * 
+	 * @param dialectPrefix
+	 *            Dialect prefix (tc)
+	 */
 	public OnceAttributeTagProcessor(String dialectPrefix) {
 		super(TemplateMode.HTML, dialectPrefix, ATTR_NAME, PRECEDENCE);
 	}

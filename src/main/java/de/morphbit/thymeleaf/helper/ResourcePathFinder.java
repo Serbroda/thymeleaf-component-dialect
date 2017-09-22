@@ -26,11 +26,25 @@ public class ResourcePathFinder {
 	private final String directory;
 	private final ClassLoader loader;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param directory
+	 *            Base directory to search resource files (e.g.
+	 *            templates/components)
+	 */
 	public ResourcePathFinder(String directory) {
 		this.directory = directory;
 		this.loader = Thread.currentThread().getContextClassLoader();
 	}
 
+	/**
+	 * Searches for resource files
+	 * 
+	 * @param recursively
+	 *            Search files recursively
+	 * @return List of files as strings
+	 */
 	public List<String> findResourceFiles(boolean recursively) {
 		return getResourceFiles(directory, new ArrayList<>(), recursively);
 	}

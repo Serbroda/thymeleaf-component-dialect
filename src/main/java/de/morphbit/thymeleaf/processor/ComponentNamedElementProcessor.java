@@ -48,6 +48,16 @@ public class ComponentNamedElementProcessor
 	private final Set<String> excludeAttributes = singleton("params");
 	private final String fragmentName;
 
+	/**
+	 * Constructor
+	 * 
+	 * @param dialectPrefix
+	 *            Dialect prefix (tc)
+	 * @param tagName
+	 *            Tag name to search for (e.g. panel)
+	 * @param fragmentName
+	 *            Fragment to search for
+	 */
 	public ComponentNamedElementProcessor(final String dialectPrefix,
 	        final String tagName, final String fragmentName) {
 		super(TemplateMode.HTML, dialectPrefix, tagName, true, null, false,
