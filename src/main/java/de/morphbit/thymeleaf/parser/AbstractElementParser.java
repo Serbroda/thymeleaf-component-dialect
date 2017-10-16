@@ -28,8 +28,13 @@ import org.attoparser.MarkupParser;
 import org.attoparser.ParseException;
 import org.attoparser.config.ParseConfiguration;
 import org.attoparser.dom.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class AbstractElementParser extends AbstractMarkupHandler {
+
+	private static final Logger LOG =
+	        LoggerFactory.getLogger(AbstractElementParser.class);
 
 	protected final String dialectPrefix;
 
@@ -61,14 +66,14 @@ public abstract class AbstractElementParser extends AbstractMarkupHandler {
 			htmlStandardParser.parse(reader, this);
 
 		} catch (IOException | ParseException e) {
-			e.printStackTrace();
+			LOG.error("Error while parsing elements: {}", e);
 		} finally {
 			try {
 				if (stream != null) {
 					stream.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOG.error("Error while closing stream: {}", e);
 			}
 		}
 
