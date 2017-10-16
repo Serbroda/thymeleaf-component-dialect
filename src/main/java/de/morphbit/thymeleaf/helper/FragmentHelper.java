@@ -25,6 +25,10 @@ import org.thymeleaf.util.StringUtils;
 
 public class FragmentHelper {
 
+	private FragmentHelper() {
+
+	}
+
 	public static IModel getFragmentModel(final ITemplateContext context,
 	        final String attributeValue,
 	        final IElementModelStructureHandler structureHandler,
