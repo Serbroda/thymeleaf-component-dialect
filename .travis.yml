@@ -13,7 +13,7 @@ install: mvn install
 
 addons:
   sonarcloud:
-    organization: serbroda-github
+    organization: "serbroda-github"
     token:
       secure: e0624c074cc2912e0a56aad2df374638bbc29bed
 script:
