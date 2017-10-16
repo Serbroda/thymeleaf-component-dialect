@@ -127,10 +127,12 @@ public class ComponentNamedElementProcessor
 
 	private Map<String, String> processAttribute(IProcessableElementTag tag) {
 		Map<String, String> attMap = new HashMap<>();
-		for (final IAttribute attribute : tag.getAllAttributes()) {
-			String completeName = attribute.getAttributeCompleteName();
-			if (!isDynamicAttribute(completeName, StandardDialect.PREFIX)) {
-				attMap.put(completeName, attribute.getValue());
+		if (tag != null) {
+			for (final IAttribute attribute : tag.getAllAttributes()) {
+				String completeName = attribute.getAttributeCompleteName();
+				if (!isDynamicAttribute(completeName, StandardDialect.PREFIX)) {
+					attMap.put(completeName, attribute.getValue());
+				}
 			}
 		}
 
