@@ -16,5 +16,7 @@ addons:
     organization: "serbroda-github"
     token:
       secure: e0624c074cc2912e0a56aad2df374638bbc29bed
+    branches:
+      - develop
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
