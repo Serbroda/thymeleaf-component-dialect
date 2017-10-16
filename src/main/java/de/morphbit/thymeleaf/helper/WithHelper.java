@@ -14,6 +14,10 @@ import org.thymeleaf.util.StringUtils;
 
 public class WithHelper {
 
+	private WithHelper() {
+
+	}
+
 	public static void processWith(ITemplateContext context,
 	        String attributeValue,
 	        IElementModelStructureHandler structureHandler) {
