@@ -174,10 +174,9 @@ public class ComponentNamedElementProcessor
 		ITemplateEvent event = null;
 		for (int i = 0; i < size; i++) {
 			event = model.get(i);
-			if (clazz == null || clazz.isInstance(event)) {
-				if (event.toString().contains(search)) {
-					return i;
-				}
+			if ((clazz == null || clazz.isInstance(event))
+			        && event.toString().contains(search)) {
+				return i;
 			}
 		}
 		return -1;
