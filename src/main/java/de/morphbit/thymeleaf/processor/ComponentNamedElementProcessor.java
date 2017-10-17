@@ -224,7 +224,7 @@ public class ComponentNamedElementProcessor
 				if (replacePart != null
 				        && replaceValueMap.containsKey(replacePart)) {
 					String newStringValue =
-					        oldAttrValue.replace("?{" + replacePart + "}",
+					        oldAttrValue.replace("?[" + replacePart + "]",
 					            replaceValueMap.get(replacePart));
 					firstEvent = modelFactory.replaceAttribute(firstEvent,
 					    AttributeNames.forTextName(entry.getKey()),
@@ -257,7 +257,7 @@ public class ComponentNamedElementProcessor
 	}
 
 	private String getReplaceAttributePart(String attributeValue) {
-		Pattern pattern = Pattern.compile(".*\\?\\{([\\w|\\d|.|\\-|_]*)\\}.*");
+		Pattern pattern = Pattern.compile(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*");
 		Matcher matcher = pattern.matcher(attributeValue);
 		while (matcher.find()) {
 			return matcher.group(1);
