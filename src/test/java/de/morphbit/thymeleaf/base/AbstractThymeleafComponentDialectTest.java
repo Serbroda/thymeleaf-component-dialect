@@ -9,7 +9,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import de.morphbit.thymeleaf.dialect.ComponentDialect;
 import de.morphbit.thymeleaf.parser.StandardThymeleafComponentParser;
 
-public class AbstractThymeleafComponentDialectTest {
+public abstract class AbstractThymeleafComponentDialectTest {
 
 	private static final String BASE_PATH = "templates";
 
