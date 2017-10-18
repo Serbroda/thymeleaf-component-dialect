@@ -8,12 +8,12 @@ import org.thymeleaf.context.Context;
 
 import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 
-public class ComponentTest extends AbstractThymeleafComponentDialectTest {
+public class ContentReplaceTest extends AbstractThymeleafComponentDialectTest {
 
-	private static final String FILE = "simple_content_replace_test.html";
+	private static final String FILE = "link_with_content.html";
 
 	@Test
-	public void test() {
+	public void itShouldNotRenderNamespaceTagsAndReplaceContent() {
 		String html = processThymeleafFile(FILE, new Context());
 
 		assertNotNull(html);
