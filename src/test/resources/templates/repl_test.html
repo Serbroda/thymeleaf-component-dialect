@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html 
+    xmlns:th="http://www.thymeleaf.org" 
+    xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+<head>
+    <title>Test</title>
+</head>
+<body>
+    
+    <form th:object="${user}">
+        <tc:valid-input tc:repl-field="name" title="'Name Field'"/>
+    </form>
+    
+</body>
+</html>
