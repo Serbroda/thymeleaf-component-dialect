@@ -73,27 +73,27 @@ public class ComponentNamedElementProcessor
 	protected void doProcess(ITemplateContext context, IModel model,
 	        IElementModelStructureHandler structureHandler) {
 		IProcessableElementTag tag = processElementTag(context, model);
-		Map<String, String> attrMap = processAttribute(tag);
+		Map<String, String> attributes = processAttribute(tag);
 
-		String param = attrMap.get("params");
+		String param = attributes.get("params");
 
-		IModel base = model.cloneModel();
-		base.remove(0);
+		IModel componentModel = model.cloneModel();
+		componentModel.remove(0);
 
-		if (base.size() > 1) {
-			base.remove(base.size() - 1);
+		if (componentModel.size() > 1) {
+			componentModel.remove(componentModel.size() - 1);
 		}
 
-		IModel frag = FragmentHelper.getFragmentModel(context,
+		IModel fragmentModel = FragmentHelper.getFragmentModel(context,
 		    fragmentName + (param == null ? "" : "(" + param + ")"),
 		    structureHandler, StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
 
 		model.reset();
 
-		IModel replaced = replaceAllAttributeValues(attrMap, context, frag);
-		model.addModel(mergeModels(replaced, base, REPLACE_CONTENT_TAG));
+		IModel replacedFragmentModel = replaceAllAttributeValues(attributes, context, fragmentModel);
+		model.addModel(mergeModels(replacedFragmentModel, componentModel, REPLACE_CONTENT_TAG));
 
-		processVariables(attrMap, context, structureHandler, excludeAttributes);
+		processVariables(attributes, context, structureHandler, excludeAttributes);
 	}
 
 	private IProcessableElementTag processElementTag(ITemplateContext context,
@@ -113,36 +113,36 @@ public class ComponentNamedElementProcessor
 		        && Objects.equals(a.getCol(), b.getCol());
 	}
 
-	private void processVariables(Map<String, String> attrMap,
+	private void processVariables(Map<String, String> attributes,
 	        ITemplateContext context,
 	        IElementModelStructureHandler structureHandler,
 	        Set<String> excludeAttr) {
-		for (Map.Entry<String, String> entry : attrMap.entrySet()) {
+		for (Map.Entry<String, String> entry : attributes.entrySet()) {
 			if (excludeAttr.contains(entry.getKey()) || isDynamicAttribute(
 			    entry.getKey(), this.getDialectPrefix())) {
 				continue;
 			}
-			String val = entry.getValue();
-			if (val == null) {
-				val = "${true}";
+			String attributeValue = entry.getValue();
+			if (attributeValue == null) {
+				attributeValue = "${true}";
 			}
-			WithHelper.processWith(context, entry.getKey() + "=" + val,
+			WithHelper.processWith(context, entry.getKey() + "=" + attributeValue,
 			    structureHandler);
 		}
 	}
 
 	private Map<String, String> processAttribute(IProcessableElementTag tag) {
-		Map<String, String> attMap = new HashMap<>();
+		Map<String, String> attributes = new HashMap<>();
 		if (tag != null) {
 			for (final IAttribute attribute : tag.getAllAttributes()) {
 				String completeName = attribute.getAttributeCompleteName();
 				if (!isDynamicAttribute(completeName, StandardDialect.PREFIX)) {
-					attMap.put(completeName, attribute.getValue());
+					attributes.put(completeName, attribute.getValue());
 				}
 			}
 		}
 
-		return attMap;
+		return attributes;
 	}
 
 	private boolean isDynamicAttribute(String attribute, String prefix) {
@@ -159,7 +159,7 @@ public class ComponentNamedElementProcessor
 
 	private IModel insertModel(IModel base, IModel insert, String replaceTag) {
 		IModel clonedModel = base.cloneModel();
-		int index = findTag(base, replaceTag, IElementTag.class);
+		int index = findTagIndex(base, replaceTag, IElementTag.class);
 		if (index > -1) {
 			clonedModel.insertModel(index, insert);
 		}
@@ -168,14 +168,14 @@ public class ComponentNamedElementProcessor
 
 	private IModel removeTag(IModel model, final String tag) {
 		IModel clonedModel = model.cloneModel();
-		int index = findTag(model, tag, IElementTag.class);
+		int index = findTagIndex(model, tag, IElementTag.class);
 		if (index > -1) {
 			clonedModel.remove(index);
 		}
 		return clonedModel;
 	}
 
-	private int findTag(IModel model, final String search, Class<?> clazz) {
+	private int findTagIndex(IModel model, final String search, Class<?> clazz) {
 		int size = model.size();
 		ITemplateEvent event = null;
 		for (int i = 0; i < size; i++) {
