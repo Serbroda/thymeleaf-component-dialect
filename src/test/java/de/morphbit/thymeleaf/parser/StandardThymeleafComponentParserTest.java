@@ -18,6 +18,10 @@ public class StandardThymeleafComponentParserTest {
 		Set<ThymeleafComponent> components = parser.parse();
 		assertTrue(!components.isEmpty());
 		assertTrue(containsComponent(components, "link"));
+		assertTrue(containsComponent(components, "link-named"));
+		assertTrue(notContainsComponent(components, "link2"));
+		assertTrue(notContainsComponent(components, "no-component"));
+		assertTrue(notContainsComponent(components, "link-component"));
 	}
 
 	private boolean containsComponent(final Set<ThymeleafComponent> components,
@@ -28,5 +32,10 @@ public class StandardThymeleafComponentParserTest {
 			}
 		}
 		return false;
+	}
+
+	private boolean notContainsComponent(
+	        final Set<ThymeleafComponent> components, final String name) {
+		return !containsComponent(components, name);
 	}
 }
