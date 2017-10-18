@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+<head>
+</head>
+<body>
+	
+    <div th:fragment="link(href, icon)">
+        <a th:href="${href}">
+            <i th:class="'glyphicon glyphicon-' + ${icon}"></i>
+            <tc:content></tc:content>
+            <span th:if="${test != null}">Test set. Value is <i th:text="${test}"></i></span>
+        </a>
+    </div>
+</body>
+</html>
