@@ -5,17 +5,11 @@
 <body>
 	
     <div th:fragment="valid-input">
-<!--         data-th-class="(${#fields.hasErrors('?[field]')} ? 'has-error ' : '') + 'form-group'" -->
-
         <label th:text="${title}"></label>
         <input
             type="text"
             data-th-field="*{?[field]}"
             class="form-control" />
-<!--         <span -->
-<!--             class="help-block" -->
-<!--             data-th-if="${#fields.hasErrors('?[field]')}" -->
-<!--             data-th-errors="*{?[field]}">*Errors*</span> -->
     </div>
     
 </body>

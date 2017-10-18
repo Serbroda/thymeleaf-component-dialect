@@ -39,7 +39,6 @@ public class AttributeReplaceTest
 		String html = processThymeleafFile(FILE, new Context(Locale.ENGLISH,
 		    Collections.singletonMap("user", new User("John"))));
 
-		System.out.println(html);
 		assertNotNull(html);
 		assertTrue(!html.matches(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*"));
 	}
