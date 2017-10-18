@@ -4,19 +4,15 @@
 </head>
 <body>
 	
-    <div th:fragment="link(href, icon)">
-        <a th:href="${href}">
-            <i th:class="'glyphicon glyphicon-' + ${icon}"></i>
+    <div th:fragment="link(href)">
+         <a th:href="${href}">
             <tc:content></tc:content>
-            <span th:if="${test != null}">Test set. Value is <i th:text="${test}"></i></span>
         </a>
     </div>
     
-    <div th:fragment="link2(href, icon)" tc:selector="link-named">
+    <div th:fragment="link2(href)" tc:selector="link-named">
         <a th:href="${href}">
-            <i th:class="'glyphicon glyphicon-' + ${icon}"></i>
             <tc:content></tc:content>
-            <span th:if="${test != null}">Test set. Value is <i th:text="${test}"></i></span>
         </a>
     </div>
     
