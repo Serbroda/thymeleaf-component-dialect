@@ -29,7 +29,7 @@ public class ContentReplaceTest extends AbstractThymeleafComponentDialectTest {
 	}
 
 	@Test
-	public void itShouldNotRenderNamespaceTagsAndReplaceContentAndConsiderVariable() {
+	public void itShouldReplaceContentAndConsiderVariable() {
 		String html = processThymeleafFile(FILE_LINK_WITH_CONTENT_AND_VARIABLE,
 		    new Context());
 
