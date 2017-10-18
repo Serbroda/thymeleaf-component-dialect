@@ -10,7 +10,7 @@ import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 
 public class ComponentTest extends AbstractThymeleafComponentDialectTest {
 
-	private static final String FILE = "link-component-test.html";
+	private static final String FILE = "simple_content_replace_test.html";
 
 	@Test
 	public void test() {

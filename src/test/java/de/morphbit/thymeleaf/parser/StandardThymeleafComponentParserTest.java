@@ -20,8 +20,8 @@ public class StandardThymeleafComponentParserTest {
 		assertTrue(containsComponent(components, "link"));
 		assertTrue(containsComponent(components, "link-named"));
 		assertTrue(notContainsComponent(components, "link2"));
-		assertTrue(notContainsComponent(components, "no-component"));
-		assertTrue(notContainsComponent(components, "link-component"));
+		assertTrue(notContainsComponent(components, "no_component"));
+		assertTrue(notContainsComponent(components, "link_component"));
 	}
 
 	private boolean containsComponent(final Set<ThymeleafComponent> components,
