@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+<head>
+</head>
+<body>
+	
+    <div th:fragment="once-component">
+         <button onclick="onceFunction()">Once Button</button>
+        
+        <script type="text/javascript" tc:once="once_component.script">
+        	function onceFunction() {
+        		console.log("Once");
+        	}
+        </script>
+    </div>
+    
+</body>
+</html>
