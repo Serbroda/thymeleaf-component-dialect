@@ -16,60 +16,61 @@
 
 package de.morphbit.thymeleaf.helper;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.*;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
 public class ResourcePathFinder {
 
-    private final String directory;
-    private final ClassLoader loader;
+	private final String directory;
+	private final ClassLoader loader;
 
-    /**
-     * Constructor
-     *
-     * @param directory
-     *            Base directory to search resource files (e.g.
-     *            templates/components)
-     */
-    public ResourcePathFinder(String directory) {
-        this.directory = directory;
-        this.loader = Thread.currentThread().getContextClassLoader();
-    }
+	/**
+	 * Constructor
+	 *
+	 * @param directory
+	 *            Base directory to search resource files (e.g.
+	 *            templates/components)
+	 */
+	public ResourcePathFinder(String directory) {
+		this.directory = directory;
+		this.loader = Thread.currentThread().getContextClassLoader();
+	}
 
-    /**
-     * Searches for resource files
-     *
-     * @param recursively
-     *            Search files recursively
-     * @return List of files as strings
-     */
-    public List<String> findResourceFiles(boolean recursively) {
-        return getResourceFiles(directory,  recursively);
-    }
+	/**
+	 * Searches for resource files
+	 *
+	 * @param recursively
+	 *            Search files recursively
+	 * @return List of files as strings
+	 */
+	public List<String> findResourceFiles(boolean recursively) {
+		return getResourceFiles(directory, recursively);
+	}
 
-    private List<String> getResourceFiles(String dir, boolean recursively)
-    {
-        List<String> files = new ArrayList<>();
-        try{
-            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(loader);
-            Resource[] resources = resolver.getResources("classpath*:/"+ dir + "/**/*.*");
-            String basePath = loader.getResource(dir).getPath();
-            for (Resource resource: resources){
+	private List<String> getResourceFiles(String dir, boolean recursively) {
+		List<String> files = new ArrayList<>();
+		try {
+			ResourcePatternResolver resolver =
+			        new PathMatchingResourcePatternResolver(loader);
+			Resource[] resources =
+			        resolver.getResources("classpath*:/" + dir + "/**/*.*");
+			String basePath = loader.getResource(dir).getPath();
+			for (Resource resource : resources) {
 
-                String pathRelativeToDir = dir + "/" + resource.getURL().getPath().replace(basePath + "/", "");
-                files.add(pathRelativeToDir);
-            }
+				String pathRelativeToDir = dir + "/" + resource.getURL()
+				    .getPath().replace(basePath + "/", "");
+				files.add(pathRelativeToDir);
+			}
 
-        }catch (IOException ex){
-            System.err.println("Could not process resource pattern.");
-        }
+		} catch (IOException ex) {
+			System.err.println("Could not process resource pattern.");
+		}
 
-        return files;
-    }
+		return files;
+	}
 }
