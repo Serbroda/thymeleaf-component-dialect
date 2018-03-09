@@ -60,7 +60,7 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 		Set<ThymeleafComponent> components = new HashSet<>();
 
 		for (String file : new ResourcePathFinder(templatePrefix + directory)
-		    .findResourceFiles(true)) {
+		    .findResourceFiles()) {
 			for (Element element : parseElements(file)) {
 				if (isThymeleafComponent(element)) {
 					components.add(createComponent(element, file));

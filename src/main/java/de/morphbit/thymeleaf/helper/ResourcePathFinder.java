@@ -44,15 +44,15 @@ public class ResourcePathFinder {
 	/**
 	 * Searches for resource files
 	 *
-	 * @param recursively
-	 *            Search files recursively
+	 * Search files recursively
+	 * 
 	 * @return List of files as strings
 	 */
-	public List<String> findResourceFiles(boolean recursively) {
-		return getResourceFiles(directory, recursively);
+	public List<String> findResourceFiles() {
+		return getResourceFiles(directory);
 	}
 
-	private List<String> getResourceFiles(String dir, boolean recursively) {
+	private List<String> getResourceFiles(String dir) {
 		List<String> files = new ArrayList<>();
 		try {
 			ResourcePatternResolver resolver =
