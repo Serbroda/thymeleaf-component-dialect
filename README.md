@@ -4,6 +4,8 @@ Thymeleaf Component Dialect
 [![Build Status](https://travis-ci.org/Serbroda/thymeleaf-component-dialect.svg?branch=develop)](https://travis-ci.org/Serbroda/thymeleaf-component-dialect)
 [![jitpack](https://jitpack.io/v/Serbroda/thymeleaf-component-dialect.svg)](https://jitpack.io/#Serbroda/thymeleaf-component-dialect)
 [![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/master/LICENSE.txt)
+[![quality gate](https://sonarcloud.io/api/badges/gate?key=de.morphbit%3Athymeleaf-component-dialect%3Adevelop)](https://sonarcloud.io/dashboard?id=de.morphbit%3Athymeleaf-component-dialect%3Adevelop)
+
 
 
 A dialect for creating reusable thymeleaf components.
