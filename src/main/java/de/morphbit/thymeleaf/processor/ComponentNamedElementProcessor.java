@@ -260,7 +260,9 @@ public class ComponentNamedElementProcessor
 		Pattern pattern = Pattern.compile(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*");
 		Matcher matcher = pattern.matcher(attributeValue);
 		while (matcher.find()) {
-			return matcher.group(1);
+			if (matcher.group(1) != null && !matcher.group(1).isEmpty()) {
+				return matcher.group(1);
+			}
 		}
 		return null;
 	}
