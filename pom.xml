@@ -38,6 +38,13 @@
             <artifactId>spring-core</artifactId>
             <version>4.3.9.RELEASE</version>
         </dependency>
+        
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.25</version>
+        </dependency>
     </dependencies>
 
     <build>
