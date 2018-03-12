@@ -20,11 +20,16 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class ResourcePathFinder {
+
+	private static final Logger LOG =
+	        LoggerFactory.getLogger(ResourcePathFinder.class);
 
 	private final String directory;
 	private final ClassLoader loader;
@@ -68,7 +73,7 @@ public class ResourcePathFinder {
 			}
 
 		} catch (IOException ex) {
-			System.err.println("Could not process resource pattern.");
+			LOG.error("Could not process resource pattern. {}", ex);
 		}
 
 		return files;
