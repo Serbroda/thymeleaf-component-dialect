@@ -127,7 +127,7 @@ public class ComponentNamedElementProcessor
 				attributeValue = "${true}";
 			}
 			WithHelper.processWith(context, entry.getKey() + "=" + attributeValue,
-			    structureHandler);
+			    structureHandler, false);
 		}
 	}
 

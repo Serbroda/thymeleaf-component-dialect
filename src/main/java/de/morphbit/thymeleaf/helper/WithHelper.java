@@ -20,7 +20,7 @@ public class WithHelper {
 
 	public static void processWith(ITemplateContext context,
 	        String attributeValue,
-	        IElementModelStructureHandler structureHandler) {
+	        IElementModelStructureHandler structureHandler, boolean registerGlobal) {
 		final AssignationSequence assignations =
 		        AssignationUtils.parseAssignationSequence(context,
 		            attributeValue, false /* no parameters without value */);
@@ -29,6 +29,7 @@ public class WithHelper {
 			    "Could not parse value as attribute assignations: \""
 			            + attributeValue + "\"");
 		}
+
 
 		// Normally we would just allow the structure handler to be in charge of
 		// declaring the local variables
@@ -68,7 +69,13 @@ public class WithHelper {
 				            + leftExpr + "\"");
 			}
 
-			if (engineContext != null) {
+			if(registerGlobal && engineContext != null) {
+				engineContext.setVariable(newVariableName, rightValue);
+			} else {
+				structureHandler.setLocalVariable(newVariableName, rightValue);
+			}
+
+			/*if (engineContext != null) {
 				// The advantage of this vs. using the structure handler is that
 				// we will be able to
 				// use this newly created value in other expressions in the same
@@ -78,7 +85,7 @@ public class WithHelper {
 				// The problem is, these won't be available until we execute the
 				// next processor
 				structureHandler.setLocalVariable(newVariableName, rightValue);
-			}
+			}*/
 
 		}
 	}
