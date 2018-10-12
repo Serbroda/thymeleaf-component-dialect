@@ -49,7 +49,7 @@ public class ComponentNamedElementProcessor
 
 	private static final int PRECEDENCE = 350;
 
-	private final Set<String> excludeAttributes = singleton("params");
+	private final Set<String> excludeAttributes = singleton("tc:constructor");
 	private final String fragmentName;
 
 	/**
@@ -75,7 +75,7 @@ public class ComponentNamedElementProcessor
 		IProcessableElementTag tag = processElementTag(context, model);
 		Map<String, String> attributes = processAttribute(tag);
 
-		String param = attributes.get("params");
+		String param = attributes.get("tc:constructor");
 
 		IModel componentModel = model.cloneModel();
 		componentModel.remove(0);
