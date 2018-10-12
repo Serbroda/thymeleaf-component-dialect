@@ -75,7 +75,7 @@ public class ComponentNamedElementProcessor
 		IProcessableElementTag tag = processElementTag(context, model);
 		Map<String, String> attributes = processAttribute(tag);
 
-		String param = attributes.get("tc:constructor");
+		String constructorParams = attributes.get("tc:constructor");
 
 		IModel componentModel = model.cloneModel();
 		componentModel.remove(0);
@@ -85,7 +85,7 @@ public class ComponentNamedElementProcessor
 		}
 
 		IModel fragmentModel = FragmentHelper.getFragmentModel(context,
-		    fragmentName + (param == null ? "" : "(" + param + ")"),
+		    fragmentName + (constructorParams == null ? "" : "(" + constructorParams + ")"),
 		    structureHandler, StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
 
 		model.reset();
