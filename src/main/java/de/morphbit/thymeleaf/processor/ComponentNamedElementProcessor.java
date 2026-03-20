@@ -16,7 +16,7 @@
 
 package de.morphbit.thymeleaf.processor;
 
-import static java.util.Collections.singleton;
+import static java.util.Set.of;
 
 import de.morphbit.thymeleaf.helper.FragmentHelper;
 import de.morphbit.thymeleaf.helper.WithHelper;
@@ -45,8 +45,9 @@ public class ComponentNamedElementProcessor extends AbstractElementModelProcesso
 	private static final String REPLACE_CONTENT_TAG = "tc:content";
 
 	private static final int PRECEDENCE = 350;
+	private static final Pattern REPLACE_PATTERN = Pattern.compile(".*\\?\\[([\\w.\\-_]*)\\].*");
 
-	private final Set<String> excludeAttributes = singleton("tc:constructor");
+	private final Set<String> excludeAttributes = of("tc:constructor");
 	private final String fragmentName;
 
 	/**
@@ -196,10 +197,10 @@ public class ComponentNamedElementProcessor extends AbstractElementModelProcesso
 	private ITemplateEvent replaceAttributeValue(ITemplateContext context, ITemplateEvent model,
 			Map<String, String> replaceValueMap) {
 		IProcessableElementTag firstEvent = null;
-		if (!replaceValueMap.isEmpty() && model instanceof IProcessableElementTag) {
+		if (!replaceValueMap.isEmpty() && model instanceof IProcessableElementTag processableTag) {
 			final IModelFactory modelFactory = context.getModelFactory();
 
-			firstEvent = (IProcessableElementTag) model;
+			firstEvent = processableTag;
 			for (Map.Entry<String, String> entry : firstEvent.getAttributeMap().entrySet()) {
 				String oldAttrValue = entry.getValue();
 				String replacePart = getReplaceAttributePart(oldAttrValue);
@@ -233,8 +234,7 @@ public class ComponentNamedElementProcessor extends AbstractElementModelProcesso
 	}
 
 	private String getReplaceAttributePart(String attributeValue) {
-		Pattern pattern = Pattern.compile(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*");
-		Matcher matcher = pattern.matcher(attributeValue);
+		Matcher matcher = REPLACE_PATTERN.matcher(attributeValue);
 		while (matcher.find()) {
 			if (matcher.group(1) != null && !matcher.group(1).isEmpty()) {
 				return matcher.group(1);

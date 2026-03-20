@@ -50,25 +50,12 @@ public abstract class AbstractElementParser extends AbstractMarkupHandler {
 	protected List<Element> parseElements(InputStream stream) {
 		this.elements = new ArrayList<>();
 
-		try (Reader reader = new InputStreamReader(stream)) {
-			final ParseConfiguration config = ParseConfiguration.htmlConfiguration();
-
-			final ParseConfiguration autoCloseConfig = ParseConfiguration.htmlConfiguration();
-			autoCloseConfig.setElementBalancing(ParseConfiguration.ElementBalancing.AUTO_OPEN_CLOSE);
-
-			final MarkupParser htmlStandardParser = new MarkupParser(config);
+		try (stream; Reader reader = new InputStreamReader(stream)) {
+			var config = ParseConfiguration.htmlConfiguration();
+			var htmlStandardParser = new MarkupParser(config);
 			htmlStandardParser.parse(reader, this);
-
 		} catch (IOException | ParseException e) {
-			LOG.error("Error while parsing elements: {}", e);
-		} finally {
-			try {
-				if (stream != null) {
-					stream.close();
-				}
-			} catch (IOException e) {
-				LOG.error("Error while closing stream: {}", e);
-			}
+			LOG.error("Error while parsing elements", e);
 		}
 
 		return this.elements;

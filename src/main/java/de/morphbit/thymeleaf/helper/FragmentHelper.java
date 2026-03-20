@@ -66,9 +66,7 @@ public class FragmentHelper {
 
 		boolean signatureApplied = false;
 		final ITemplateEvent firstEvent = fragmentModel.size() > 2 ? fragmentModel.get(1) : null;
-		if (firstEvent != null && IProcessableElementTag.class.isAssignableFrom(firstEvent.getClass())) {
-
-			final IProcessableElementTag fragmentHolderEvent = (IProcessableElementTag) firstEvent;
+		if (firstEvent instanceof IProcessableElementTag fragmentHolderEvent) {
 
 			if (fragmentHolderEvent.hasAttribute(dialectPrefix, FRAGMENT_ATTR_NAME)) {
 				// The selected fragment actually has a "th:fragment" attribute,
@@ -122,7 +120,7 @@ public class FragmentHelper {
 		 * APPLY THE FRAGMENT PARAMETERS AS LOCAL VARIABLES, perhaps after reshaping it
 		 * according to the fragment signature
 		 */
-		if (fragmentParameters != null && fragmentParameters.size() > 0) {
+		if (fragmentParameters != null && !fragmentParameters.isEmpty()) {
 			for (final Map.Entry<String, Object> fragmentParameterEntry : fragmentParameters.entrySet()) {
 				structureHandler.setLocalVariable(fragmentParameterEntry.getKey(), fragmentParameterEntry.getValue());
 			}
@@ -149,8 +147,8 @@ public class FragmentHelper {
 			// returning a Fragment itself, so we should simply return it
 			final Object templateNameExpressionResult = executedFragmentExpression.getTemplateNameExpressionResult();
 			if (templateNameExpressionResult != null) {
-				if (templateNameExpressionResult instanceof Fragment) {
-					return templateNameExpressionResult;
+				if (templateNameExpressionResult instanceof Fragment fragment) {
+					return fragment;
 				}
 				if (templateNameExpressionResult == NoOpToken.VALUE) {
 					return NoOpToken.VALUE;

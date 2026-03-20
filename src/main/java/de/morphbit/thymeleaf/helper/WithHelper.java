@@ -35,12 +35,8 @@ public class WithHelper {
 		// a more specific interface --which shouldn't be used directly except
 		// in this specific, special case-- and
 		// put the local variables directly into it.
-		IEngineContext engineContext = null;
-		if (context instanceof IEngineContext) {
-			// NOTE this interface is internal and should not be used in users'
-			// code
-			engineContext = (IEngineContext) context;
-		}
+		// NOTE IEngineContext is internal and should not be used in users' code
+		var engineContext = context instanceof IEngineContext ctx ? ctx : null;
 
 		final List<Assignation> assignationValues = assignations.getAssignations();
 		final int assignationValuesLen = assignationValues.size();

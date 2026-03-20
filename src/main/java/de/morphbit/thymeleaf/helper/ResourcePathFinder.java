@@ -27,9 +27,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,7 @@ public class ResourcePathFinder {
 				if ("jar".equals(uri.getScheme())) {
 					FileSystem fileSystem;
 					try {
-						fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
+						fileSystem = FileSystems.newFileSystem(uri, Map.of());
 					} catch (FileSystemAlreadyExistsException e) {
 						fileSystem = FileSystems.getFileSystem(uri);
 					}
@@ -93,7 +93,7 @@ public class ResourcePathFinder {
 				}
 			}
 		} catch (IOException | URISyntaxException ex) {
-			LOG.error("Could not process resource pattern. {}", ex.getMessage(), ex);
+			LOG.error("Could not process resource pattern", ex);
 		}
 
 		return files;
