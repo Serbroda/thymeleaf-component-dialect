@@ -19,12 +19,19 @@ package de.morphbit.thymeleaf.parser;
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
 import java.util.Set;
 
+/**
+ * Interface for component parsers that discover {@link ThymeleafComponent}s
+ * from template files. Implementations are registered via
+ * {@link de.morphbit.thymeleaf.dialect.ComponentDialect#addParser(IThymeleafComponentParser)}.
+ *
+ * @see StandardThymeleafComponentParser
+ */
 public interface IThymeleafComponentParser {
 
 	/**
-	 * Parses thymeleaf components
-	 * 
-	 * @return List of thymeleaf components
+	 * Scans template files and returns all discovered components.
+	 *
+	 * @return set of discovered components
 	 */
 	Set<ThymeleafComponent> parse();
 }

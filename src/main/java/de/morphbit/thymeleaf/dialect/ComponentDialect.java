@@ -28,32 +28,62 @@ import org.thymeleaf.dialect.AbstractProcessorDialect;
 import org.thymeleaf.processor.IProcessor;
 
 /**
- * A dialect for creating reusable composite components with thymeleaf
- * 
- * @author Danny Rottstegge
+ * A Thymeleaf dialect for creating reusable UI components, similar to React or
+ * Vue components. Components are defined using standard {@code th:fragment}
+ * attributes and used via the {@code tc:} namespace.
  *
+ * <p>
+ * Usage with Spring Boot:
+ * </p>
+ * 
+ * <pre>{@code
+ * @Bean
+ * public ComponentDialect componentDialect() {
+ * 	var dialect = new ComponentDialect();
+ * 	dialect.addParser(new StandardThymeleafComponentParser("templates/", ".html", "components"));
+ * 	return dialect;
+ * }
+ * }</pre>
+ *
+ * <p>
+ * Components can also be registered manually:
+ * </p>
+ * 
+ * <pre>{@code
+ * var components = Set.of(new ThymeleafComponent("panel", "components/panel :: panel"));
+ * var dialect = new ComponentDialect(components);
+ * }</pre>
+ *
+ * @author Danny Rottstegge
+ * @see ThymeleafComponent
+ * @see IThymeleafComponentParser
  */
 public class ComponentDialect extends AbstractProcessorDialect {
 
+	/** The dialect name. */
 	public static final String NAME = "Component Dialect";
+	/** The namespace prefix used in templates ({@code tc}). */
 	public static final String PREFIX = "tc";
+	/** The dialect precedence (lower values are processed first). */
 	public static final int PRECEDENCE = 1000;
 
 	private final Set<ThymeleafComponent> components;
 	private final List<IThymeleafComponentParser> parsers = new ArrayList<>();
 
 	/**
-	 * Constructor
+	 * Creates a new dialect with no pre-registered components. Use
+	 * {@link #addParser(IThymeleafComponentParser)} to register a parser for
+	 * automatic component discovery.
 	 */
 	public ComponentDialect() {
 		this(null);
 	}
 
 	/**
-	 * Constructor, adding components
-	 * 
+	 * Creates a new dialect with manually registered components.
+	 *
 	 * @param components
-	 *            Thymeleaf components
+	 *            set of components to register, or {@code null}
 	 */
 	public ComponentDialect(Set<ThymeleafComponent> components) {
 		super(NAME, PREFIX, PRECEDENCE);
@@ -71,14 +101,12 @@ public class ComponentDialect extends AbstractProcessorDialect {
 
 		if (this.components != null) {
 			for (ThymeleafComponent comp : this.components) {
-				processors.add(
-						new ComponentNamedElementProcessor(dialectPrefix, comp.getName(), comp.getFragmentTemplate()));
+				processors.add(new ComponentNamedElementProcessor(dialectPrefix, comp.name(), comp.fragmentTemplate()));
 			}
 		}
 
 		for (ThymeleafComponent comp : parseComponents()) {
-			processors
-					.add(new ComponentNamedElementProcessor(dialectPrefix, comp.getName(), comp.getFragmentTemplate()));
+			processors.add(new ComponentNamedElementProcessor(dialectPrefix, comp.name(), comp.fragmentTemplate()));
 		}
 
 		return processors;
@@ -99,10 +127,12 @@ public class ComponentDialect extends AbstractProcessorDialect {
 	}
 
 	/**
-	 * Add parser to the list of parsers
-	 * 
+	 * Adds a parser that will discover and register components automatically.
+	 * Multiple parsers can be added to scan different directories.
+	 *
 	 * @param parser
-	 *            Thymeleaf component parser
+	 *            the component parser to add
+	 * @see de.morphbit.thymeleaf.parser.StandardThymeleafComponentParser
 	 */
 	public void addParser(IThymeleafComponentParser parser) {
 		this.parsers.add(parser);

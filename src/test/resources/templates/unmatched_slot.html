@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect">
+<head>
+    <title>Test</title>
+</head>
+<body>
+
+    <tc:card title="'Test'">
+        <tc:slot name="nonexistent"><span>This slot does not exist in the component</span></tc:slot>
+        <p>Default body content</p>
+    </tc:card>
+
+</body>
+</html>

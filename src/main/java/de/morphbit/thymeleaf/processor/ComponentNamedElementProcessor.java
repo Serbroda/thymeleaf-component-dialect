@@ -81,9 +81,10 @@ public class ComponentNamedElementProcessor extends AbstractElementModelProcesso
 		String constructorParams = attributes.get("tc:constructor");
 
 		IModel componentModel = model.cloneModel();
-		componentModel.remove(0);
-
-		if (componentModel.size() > 1) {
+		if (componentModel.size() > 0) {
+			componentModel.remove(0);
+		}
+		if (componentModel.size() > 0) {
 			componentModel.remove(componentModel.size() - 1);
 		}
 

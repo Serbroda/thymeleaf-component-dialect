@@ -24,6 +24,24 @@ import java.util.Set;
 import org.attoparser.dom.Element;
 import org.thymeleaf.standard.StandardDialect;
 
+/**
+ * Default implementation of {@link IThymeleafComponentParser} that discovers
+ * components by scanning HTML files for {@code th:fragment} attributes.
+ *
+ * <p>
+ * Each fragment found becomes a component that can be used with the {@code tc:}
+ * namespace. The component name defaults to the fragment name, unless a
+ * {@code tc:selector} attribute provides a custom name.
+ * </p>
+ *
+ * <p>
+ * Example: given a file {@code templates/components/panel.html} containing
+ * {@code <div th:fragment="panel(title)">}, this parser registers a component
+ * accessible as {@code <tc:panel>}.
+ * </p>
+ *
+ * @see ComponentDialect#addParser(IThymeleafComponentParser)
+ */
 public class StandardThymeleafComponentParser extends AbstractElementParser implements IThymeleafComponentParser {
 
 	protected static final String NAME_ATTRIBUTE = "selector";
