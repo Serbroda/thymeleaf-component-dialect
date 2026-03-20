@@ -37,17 +37,20 @@ Add the dependency (for all available versions see [https://jitpack.io/#Serbroda
 </dependency>
 ```
 
-Create a bean of `ComponentDialect`. You can also register parsers to add components automatically. The `StandardThymeleafComponentParser` searches for all `th:fragment` attributes and registers them as components.
+**With Spring Boot 3.x:** No configuration needed. The dialect is auto-configured and scans `templates/components/` for component fragments.
+
+**Custom configuration:** To customize the component directory or register components manually, define your own `ComponentDialect` bean (the auto-configuration will back off):
 
 ```java
 @Bean
 public ComponentDialect componentDialect() {
     ComponentDialect dialect = new ComponentDialect();
-    dialect.addParser(new StandardThymeleafComponentParser("templates/", ".html", "components"));
+    dialect.addParser(new StandardThymeleafComponentParser("templates/", ".html", "my-components"));
     return dialect;
 }
 ```
 
+**Without Spring Boot:** Register the dialect manually with your `TemplateEngine`.
 
 Usage
 -----
