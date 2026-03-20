@@ -1,6 +1,7 @@
 package de.morphbit.thymeleaf.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,30 +11,30 @@ public class ThymeleafComponentTest {
 
 	@Test
 	public void itShouldStoreNameAndFragmentTemplate() {
-		ThymeleafComponent component = new ThymeleafComponent("panel", "components/panel :: panel");
+		var component = new ThymeleafComponent("panel", "components/panel :: panel");
 
-		assertEquals("panel", component.getName());
-		assertEquals("components/panel :: panel", component.getFragmentTemplate());
-	}
-
-	@Test
-	public void itShouldAllowSettingNameAndFragmentTemplate() {
-		ThymeleafComponent component = new ThymeleafComponent("old", "old");
-
-		component.setName("new-name");
-		component.setFragmentTemplate("new/template :: fragment");
-
-		assertEquals("new-name", component.getName());
-		assertEquals("new/template :: fragment", component.getFragmentTemplate());
+		assertEquals("panel", component.name());
+		assertEquals("components/panel :: panel", component.fragmentTemplate());
 	}
 
 	@Test
 	public void itShouldHaveMeaningfulToString() {
-		ThymeleafComponent component = new ThymeleafComponent("panel", "components/panel :: panel");
+		var component = new ThymeleafComponent("panel", "components/panel :: panel");
 
 		String toString = component.toString();
 		assertNotNull(toString);
 		assertTrue(toString.contains("panel"));
 		assertTrue(toString.contains("components/panel :: panel"));
+	}
+
+	@Test
+	public void itShouldImplementEqualsAndHashCode() {
+		var a = new ThymeleafComponent("panel", "components/panel :: panel");
+		var b = new ThymeleafComponent("panel", "components/panel :: panel");
+		var c = new ThymeleafComponent("other", "components/other :: other");
+
+		assertEquals(a, b);
+		assertEquals(a.hashCode(), b.hashCode());
+		assertNotEquals(a, c);
 	}
 }

@@ -23,6 +23,6 @@ public class StandardThymeleafComponentParserTest {
 	}
 
 	private boolean containsComponent(final Set<ThymeleafComponent> components, final String name) {
-		return components.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name));
+		return components.stream().anyMatch(c -> c.name().equalsIgnoreCase(name));
 	}
 }
