@@ -28,11 +28,17 @@ import java.util.regex.Pattern;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeNames;
 import org.thymeleaf.model.IAttribute;
+import org.thymeleaf.model.ICloseElementTag;
 import org.thymeleaf.model.IElementTag;
 import org.thymeleaf.model.IModel;
 import org.thymeleaf.model.IModelFactory;
+import org.thymeleaf.model.IOpenElementTag;
 import org.thymeleaf.model.IProcessableElementTag;
+import org.thymeleaf.model.IStandaloneElementTag;
+import org.thymeleaf.model.ITemplateEnd;
 import org.thymeleaf.model.ITemplateEvent;
+import org.thymeleaf.model.ITemplateStart;
+import org.thymeleaf.model.IText;
 import org.thymeleaf.processor.element.AbstractElementModelProcessor;
 import org.thymeleaf.processor.element.IElementModelStructureHandler;
 import org.thymeleaf.standard.StandardDialect;
@@ -45,7 +51,9 @@ public class ComponentNamedElementProcessor
         extends AbstractElementModelProcessor {
 
 	private static final String FRAGMENT_ATTRIBUTE = "fragment";
-	private static final String REPLACE_CONTENT_TAG = "tc:content";
+	private static final String CONTENT_TAG = "tc:content";
+	private static final String SLOT_TAG = "tc:slot";
+	private static final String NAME_ATTR = "name";
 
 	private static final int PRECEDENCE = 350;
 
@@ -91,7 +99,14 @@ public class ComponentNamedElementProcessor
 		model.reset();
 
 		IModel replacedFragmentModel = replaceAllAttributeValues(attributes, context, fragmentModel);
-		model.addModel(mergeModels(replacedFragmentModel, componentModel, REPLACE_CONTENT_TAG));
+
+		IModelFactory modelFactory = context.getModelFactory();
+		Map<String, IModel> namedSlots = new HashMap<>();
+		IModel defaultContent = modelFactory.createModel();
+		extractSlots(componentModel, namedSlots, defaultContent, modelFactory);
+
+		model.addModel(mergeSlots(replacedFragmentModel, namedSlots,
+		    defaultContent, modelFactory));
 
 		processVariables(attributes, context, structureHandler, excludeAttributes);
 	}
@@ -150,42 +165,156 @@ public class ComponentNamedElementProcessor
 		        || attribute.startsWith("data-" + prefix + "-");
 	}
 
-	private IModel mergeModels(IModel base, IModel insert, String replaceTag) {
-		IModel mergedModel = insertModel(base, insert, replaceTag);
-		mergedModel = removeTag(mergedModel, replaceTag);
-		mergedModel = removeTag(mergedModel, replaceTag);
-		return mergedModel;
-	}
-
-	private IModel insertModel(IModel base, IModel insert, String replaceTag) {
-		IModel clonedModel = base.cloneModel();
-		int index = findTagIndex(base, replaceTag, IElementTag.class);
-		if (index > -1) {
-			clonedModel.insertModel(index, insert);
-		}
-		return clonedModel;
-	}
-
-	private IModel removeTag(IModel model, final String tag) {
-		IModel clonedModel = model.cloneModel();
-		int index = findTagIndex(model, tag, IElementTag.class);
-		if (index > -1) {
-			clonedModel.remove(index);
-		}
-		return clonedModel;
-	}
-
-	private int findTagIndex(IModel model, final String search, Class<?> clazz) {
+	private void extractSlots(IModel model, Map<String, IModel> namedSlots,
+	        IModel defaultContent, IModelFactory modelFactory) {
+		int i = 0;
 		int size = model.size();
-		ITemplateEvent event = null;
-		for (int i = 0; i < size; i++) {
-			event = model.get(i);
-			if ((clazz == null || clazz.isInstance(event))
-			        && event.toString().contains(search)) {
-				return i;
+
+		while (i < size) {
+			ITemplateEvent event = model.get(i);
+			String elementName = getElementName(event);
+
+			if (SLOT_TAG.equals(elementName)
+			        && event instanceof IOpenElementTag) {
+				String slotName = ((IProcessableElementTag) event)
+				    .getAttributeValue(NAME_ATTR);
+				IModel slotContent = modelFactory.createModel();
+				i++;
+				int depth = 1;
+				while (i < size) {
+					event = model.get(i);
+					elementName = getElementName(event);
+					if (SLOT_TAG.equals(elementName)
+					        && event instanceof IOpenElementTag) {
+						depth++;
+					} else if (SLOT_TAG.equals(elementName)
+					        && event instanceof ICloseElementTag) {
+						depth--;
+						if (depth == 0) {
+							i++;
+							break;
+						}
+					}
+					slotContent.add(event);
+					i++;
+				}
+				if (slotName != null && !slotName.isEmpty()) {
+					namedSlots.put(slotName, slotContent);
+				} else {
+					for (int j = 0; j < slotContent.size(); j++) {
+						defaultContent.add(slotContent.get(j));
+					}
+				}
+			} else {
+				defaultContent.add(event);
+				i++;
 			}
 		}
-		return -1;
+	}
+
+	private IModel mergeSlots(IModel fragmentModel,
+	        Map<String, IModel> namedSlots, IModel defaultContent,
+	        IModelFactory modelFactory) {
+		IModel result = modelFactory.createModel();
+		int i = 0;
+		int size = fragmentModel.size();
+
+		while (i < size) {
+			ITemplateEvent event = fragmentModel.get(i);
+			String elementName = getElementName(event);
+
+			if (CONTENT_TAG.equals(elementName)) {
+				String contentName = null;
+				if (event instanceof IProcessableElementTag) {
+					contentName = ((IProcessableElementTag) event)
+					    .getAttributeValue(NAME_ATTR);
+				}
+
+				if (event instanceof IStandaloneElementTag) {
+					IModel slotContent = resolveSlotContent(contentName,
+					    namedSlots, defaultContent, null);
+					if (slotContent != null) {
+						result.addModel(slotContent);
+					}
+					i++;
+				} else if (event instanceof IOpenElementTag) {
+					IModel fallbackContent = modelFactory.createModel();
+					i++;
+					int depth = 1;
+					while (i < size) {
+						event = fragmentModel.get(i);
+						elementName = getElementName(event);
+						if (CONTENT_TAG.equals(elementName)
+						        && event instanceof IOpenElementTag) {
+							depth++;
+						} else if (CONTENT_TAG.equals(elementName)
+						        && event instanceof ICloseElementTag) {
+							depth--;
+							if (depth == 0) {
+								i++;
+								break;
+							}
+						}
+						fallbackContent.add(event);
+						i++;
+					}
+					IModel slotContent = resolveSlotContent(contentName,
+					    namedSlots, defaultContent, fallbackContent);
+					if (slotContent != null) {
+						result.addModel(slotContent);
+					}
+				} else {
+					i++;
+				}
+			} else if (event instanceof ITemplateStart
+				        || event instanceof ITemplateEnd) {
+				i++;
+			} else {
+				result.add(event);
+				i++;
+			}
+		}
+
+		return result;
+	}
+
+	private IModel resolveSlotContent(String contentName,
+	        Map<String, IModel> namedSlots, IModel defaultContent,
+	        IModel fallbackContent) {
+		if (contentName != null && !contentName.isEmpty()) {
+			IModel slotContent = namedSlots.get(contentName);
+			if (slotContent != null && !isEmptyOrWhitespace(slotContent)) {
+				return slotContent;
+			}
+			return fallbackContent;
+		} else {
+			if (defaultContent != null
+			        && !isEmptyOrWhitespace(defaultContent)) {
+				return defaultContent;
+			}
+			return fallbackContent;
+		}
+	}
+
+	private boolean isEmptyOrWhitespace(IModel model) {
+		for (int i = 0; i < model.size(); i++) {
+			ITemplateEvent event = model.get(i);
+			if (event instanceof IText) {
+				if (!((IText) event).getText().trim().isEmpty()) {
+					return false;
+				}
+			} else if (event instanceof IElementTag) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private String getElementName(ITemplateEvent event) {
+		if (event instanceof IElementTag) {
+			return ((IElementTag) event).getElementCompleteName();
+		}
+		return null;
 	}
 
 	private IModel replaceAllAttributeValues(Map<String, String> attributes,
