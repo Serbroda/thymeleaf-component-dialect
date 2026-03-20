@@ -23,8 +23,7 @@ import org.thymeleaf.model.IProcessableElementTag;
 import org.thymeleaf.standard.processor.AbstractStandardConditionalVisibilityTagProcessor;
 import org.thymeleaf.templatemode.TemplateMode;
 
-public class OnceAttributeTagProcessor
-        extends AbstractStandardConditionalVisibilityTagProcessor {
+public class OnceAttributeTagProcessor extends AbstractStandardConditionalVisibilityTagProcessor {
 
 	public static final int PRECEDENCE = 300;
 	public static final String ATTR_NAME = "once";
@@ -40,9 +39,8 @@ public class OnceAttributeTagProcessor
 	}
 
 	@Override
-	protected boolean isVisible(ITemplateContext context,
-	        IProcessableElementTag tag, AttributeName attributeName,
-	        String attributeValue) {
+	protected boolean isVisible(ITemplateContext context, IProcessableElementTag tag, AttributeName attributeName,
+			String attributeValue) {
 		Ids ids = new Ids(context);
 		String id = ids.seq(attributeValue);
 		return (attributeValue + "1").equals(id);

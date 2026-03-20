@@ -16,15 +16,16 @@
 
 package de.morphbit.thymeleaf.processor;
 
-import static java.util.Collections.singleton;
+import static java.util.Set.of;
 
+import de.morphbit.thymeleaf.helper.FragmentHelper;
+import de.morphbit.thymeleaf.helper.WithHelper;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.engine.AttributeNames;
 import org.thymeleaf.model.IAttribute;
@@ -38,18 +39,15 @@ import org.thymeleaf.processor.element.IElementModelStructureHandler;
 import org.thymeleaf.standard.StandardDialect;
 import org.thymeleaf.templatemode.TemplateMode;
 
-import de.morphbit.thymeleaf.helper.FragmentHelper;
-import de.morphbit.thymeleaf.helper.WithHelper;
-
-public class ComponentNamedElementProcessor
-        extends AbstractElementModelProcessor {
+public class ComponentNamedElementProcessor extends AbstractElementModelProcessor {
 
 	private static final String FRAGMENT_ATTRIBUTE = "fragment";
 	private static final String REPLACE_CONTENT_TAG = "tc:content";
 
 	private static final int PRECEDENCE = 350;
+	private static final Pattern REPLACE_PATTERN = Pattern.compile(".*\\?\\[([\\w.\\-_]*)\\].*");
 
-	private final Set<String> excludeAttributes = singleton("params");
+	private final Set<String> excludeAttributes = of("tc:constructor");
 	private final String fragmentName;
 
 	/**
@@ -62,42 +60,38 @@ public class ComponentNamedElementProcessor
 	 * @param fragmentName
 	 *            Fragment to search for
 	 */
-	public ComponentNamedElementProcessor(final String dialectPrefix,
-	        final String tagName, final String fragmentName) {
-		super(TemplateMode.HTML, dialectPrefix, tagName, true, null, false,
-		    PRECEDENCE);
+	public ComponentNamedElementProcessor(final String dialectPrefix, final String tagName, final String fragmentName) {
+		super(TemplateMode.HTML, dialectPrefix, tagName, true, null, false, PRECEDENCE);
 		this.fragmentName = fragmentName;
 	}
 
 	@Override
-	protected void doProcess(ITemplateContext context, IModel model,
-	        IElementModelStructureHandler structureHandler) {
+	protected void doProcess(ITemplateContext context, IModel model, IElementModelStructureHandler structureHandler) {
 		IProcessableElementTag tag = processElementTag(context, model);
-		Map<String, String> attrMap = processAttribute(tag);
+		Map<String, String> attributes = processAttribute(tag);
 
-		String param = attrMap.get("params");
+		String constructorParams = attributes.get("tc:constructor");
 
-		IModel base = model.cloneModel();
-		base.remove(0);
+		IModel componentModel = model.cloneModel();
+		componentModel.remove(0);
 
-		if (base.size() > 1) {
-			base.remove(base.size() - 1);
+		if (componentModel.size() > 1) {
+			componentModel.remove(componentModel.size() - 1);
 		}
 
-		IModel frag = FragmentHelper.getFragmentModel(context,
-		    fragmentName + (param == null ? "" : "(" + param + ")"),
-		    structureHandler, StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
+		IModel fragmentModel = FragmentHelper.getFragmentModel(context,
+				fragmentName + (constructorParams == null ? "" : "(" + constructorParams + ")"), structureHandler,
+				StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
 
 		model.reset();
 
-		IModel replaced = replaceAllAttributeValues(attrMap, context, frag);
-		model.addModel(mergeModels(replaced, base, REPLACE_CONTENT_TAG));
+		IModel replacedFragmentModel = replaceAllAttributeValues(attributes, context, fragmentModel);
+		model.addModel(mergeModels(replacedFragmentModel, componentModel, REPLACE_CONTENT_TAG));
 
-		processVariables(attrMap, context, structureHandler, excludeAttributes);
+		processVariables(attributes, context, structureHandler, excludeAttributes);
 	}
 
-	private IProcessableElementTag processElementTag(ITemplateContext context,
-	        IModel model) {
+	private IProcessableElementTag processElementTag(ITemplateContext context, IModel model) {
 		ITemplateEvent firstEvent = model.get(0);
 		for (IProcessableElementTag tag : context.getElementStack()) {
 			if (locationMatches(firstEvent, tag)) {
@@ -108,46 +102,40 @@ public class ComponentNamedElementProcessor
 	}
 
 	private boolean locationMatches(ITemplateEvent a, ITemplateEvent b) {
-		return Objects.equals(a.getTemplateName(), b.getTemplateName())
-		        && Objects.equals(a.getLine(), b.getLine())
-		        && Objects.equals(a.getCol(), b.getCol());
+		return Objects.equals(a.getTemplateName(), b.getTemplateName()) && Objects.equals(a.getLine(), b.getLine())
+				&& Objects.equals(a.getCol(), b.getCol());
 	}
 
-	private void processVariables(Map<String, String> attrMap,
-	        ITemplateContext context,
-	        IElementModelStructureHandler structureHandler,
-	        Set<String> excludeAttr) {
-		for (Map.Entry<String, String> entry : attrMap.entrySet()) {
-			if (excludeAttr.contains(entry.getKey()) || isDynamicAttribute(
-			    entry.getKey(), this.getDialectPrefix())) {
+	private void processVariables(Map<String, String> attributes, ITemplateContext context,
+			IElementModelStructureHandler structureHandler, Set<String> excludeAttr) {
+		for (Map.Entry<String, String> entry : attributes.entrySet()) {
+			if (excludeAttr.contains(entry.getKey()) || isDynamicAttribute(entry.getKey(), this.getDialectPrefix())) {
 				continue;
 			}
-			String val = entry.getValue();
-			if (val == null) {
-				val = "${true}";
+			String attributeValue = entry.getValue();
+			if (attributeValue == null) {
+				attributeValue = "${true}";
 			}
-			WithHelper.processWith(context, entry.getKey() + "=" + val,
-			    structureHandler);
+			WithHelper.processWith(context, entry.getKey() + "=" + attributeValue, structureHandler, false);
 		}
 	}
 
 	private Map<String, String> processAttribute(IProcessableElementTag tag) {
-		Map<String, String> attMap = new HashMap<>();
+		Map<String, String> attributes = new HashMap<>();
 		if (tag != null) {
 			for (final IAttribute attribute : tag.getAllAttributes()) {
 				String completeName = attribute.getAttributeCompleteName();
 				if (!isDynamicAttribute(completeName, StandardDialect.PREFIX)) {
-					attMap.put(completeName, attribute.getValue());
+					attributes.put(completeName, attribute.getValue());
 				}
 			}
 		}
 
-		return attMap;
+		return attributes;
 	}
 
 	private boolean isDynamicAttribute(String attribute, String prefix) {
-		return attribute.startsWith(prefix + ":")
-		        || attribute.startsWith("data-" + prefix + "-");
+		return attribute.startsWith(prefix + ":") || attribute.startsWith("data-" + prefix + "-");
 	}
 
 	private IModel mergeModels(IModel base, IModel insert, String replaceTag) {
@@ -159,7 +147,7 @@ public class ComponentNamedElementProcessor
 
 	private IModel insertModel(IModel base, IModel insert, String replaceTag) {
 		IModel clonedModel = base.cloneModel();
-		int index = findTag(base, replaceTag, IElementTag.class);
+		int index = findTagIndex(base, replaceTag, IElementTag.class);
 		if (index > -1) {
 			clonedModel.insertModel(index, insert);
 		}
@@ -168,30 +156,28 @@ public class ComponentNamedElementProcessor
 
 	private IModel removeTag(IModel model, final String tag) {
 		IModel clonedModel = model.cloneModel();
-		int index = findTag(model, tag, IElementTag.class);
+		int index = findTagIndex(model, tag, IElementTag.class);
 		if (index > -1) {
 			clonedModel.remove(index);
 		}
 		return clonedModel;
 	}
 
-	private int findTag(IModel model, final String search, Class<?> clazz) {
+	private int findTagIndex(IModel model, final String search, Class<?> clazz) {
 		int size = model.size();
 		ITemplateEvent event = null;
 		for (int i = 0; i < size; i++) {
 			event = model.get(i);
-			if ((clazz == null || clazz.isInstance(event))
-			        && event.toString().contains(search)) {
+			if ((clazz == null || clazz.isInstance(event)) && event.toString().contains(search)) {
 				return i;
 			}
 		}
 		return -1;
 	}
 
-	private IModel replaceAllAttributeValues(Map<String, String> attributes,
-	        ITemplateContext context, IModel model) {
-		Map<String, String> replaceAttributes = findAllAttributesStartsWith(
-		    attributes, super.getDialectPrefix(), "repl-", true);
+	private IModel replaceAllAttributeValues(Map<String, String> attributes, ITemplateContext context, IModel model) {
+		Map<String, String> replaceAttributes = findAllAttributesStartsWith(attributes, super.getDialectPrefix(),
+				"repl-", true);
 
 		if (replaceAttributes.isEmpty()) {
 			return model;
@@ -199,8 +185,7 @@ public class ComponentNamedElementProcessor
 		IModel clonedModel = model.cloneModel();
 		int size = model.size();
 		for (int i = 0; i < size; i++) {
-			ITemplateEvent replacedEvent = replaceAttributeValue(context,
-			    clonedModel.get(i), replaceAttributes);
+			ITemplateEvent replacedEvent = replaceAttributeValue(context, clonedModel.get(i), replaceAttributes);
 			if (replacedEvent != null) {
 				clonedModel.replace(i, replacedEvent);
 			}
@@ -209,46 +194,38 @@ public class ComponentNamedElementProcessor
 		return clonedModel;
 	}
 
-	private ITemplateEvent replaceAttributeValue(ITemplateContext context,
-	        ITemplateEvent model, Map<String, String> replaceValueMap) {
+	private ITemplateEvent replaceAttributeValue(ITemplateContext context, ITemplateEvent model,
+			Map<String, String> replaceValueMap) {
 		IProcessableElementTag firstEvent = null;
-		if (!replaceValueMap.isEmpty()
-		        && model instanceof IProcessableElementTag) {
+		if (!replaceValueMap.isEmpty() && model instanceof IProcessableElementTag processableTag) {
 			final IModelFactory modelFactory = context.getModelFactory();
 
-			firstEvent = (IProcessableElementTag) model;
-			for (Map.Entry<String, String> entry : firstEvent.getAttributeMap()
-			    .entrySet()) {
+			firstEvent = processableTag;
+			for (Map.Entry<String, String> entry : firstEvent.getAttributeMap().entrySet()) {
 				String oldAttrValue = entry.getValue();
 				String replacePart = getReplaceAttributePart(oldAttrValue);
-				if (replacePart != null
-				        && replaceValueMap.containsKey(replacePart)) {
-					String newStringValue =
-					        oldAttrValue.replace("?[" + replacePart + "]",
-					            replaceValueMap.get(replacePart));
-					firstEvent = modelFactory.replaceAttribute(firstEvent,
-					    AttributeNames.forTextName(entry.getKey()),
-					    entry.getKey(), newStringValue);
+				if (replacePart != null && replaceValueMap.containsKey(replacePart)) {
+					String newStringValue = oldAttrValue.replace("?[" + replacePart + "]",
+							replaceValueMap.get(replacePart));
+					firstEvent = modelFactory.replaceAttribute(firstEvent, AttributeNames.forTextName(entry.getKey()),
+							entry.getKey(), newStringValue);
 				}
 			}
 		}
 		return firstEvent;
 	}
 
-	private Map<String, String> findAllAttributesStartsWith(
-	        final Map<String, String> attributes, final String prefix,
-	        final String attributeName, boolean removeStart) {
+	private Map<String, String> findAllAttributesStartsWith(final Map<String, String> attributes, final String prefix,
+			final String attributeName, boolean removeStart) {
 		Map<String, String> matchingAttributes = new HashMap<>();
 		for (Map.Entry<String, String> entry : attributes.entrySet()) {
 			String key = entry.getKey();
 			String value = entry.getValue();
 			if (key.startsWith(prefix + ":" + attributeName)
-			        || key.startsWith("data-" + prefix + "-" + attributeName)) {
+					|| key.startsWith("data-" + prefix + "-" + attributeName)) {
 				if (removeStart) {
-					key = key.replaceAll("^" + prefix + ":" + attributeName,
-					    "");
-					key = key.replaceAll(
-					    "^data-" + prefix + "-" + attributeName, "");
+					key = key.replaceAll("^" + prefix + ":" + attributeName, "");
+					key = key.replaceAll("^data-" + prefix + "-" + attributeName, "");
 				}
 				matchingAttributes.put(key, value);
 			}
@@ -257,10 +234,11 @@ public class ComponentNamedElementProcessor
 	}
 
 	private String getReplaceAttributePart(String attributeValue) {
-		Pattern pattern = Pattern.compile(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*");
-		Matcher matcher = pattern.matcher(attributeValue);
+		Matcher matcher = REPLACE_PATTERN.matcher(attributeValue);
 		while (matcher.find()) {
-			return matcher.group(1);
+			if (matcher.group(1) != null && !matcher.group(1).isEmpty()) {
+				return matcher.group(1);
+			}
 		}
 		return null;
 	}

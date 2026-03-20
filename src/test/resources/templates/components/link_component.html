@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect">
+<head>
+</head>
+<body>
+	
+    <div th:fragment="link(href)">
+         <a th:href="${href}">
+            <span th:if="${witharrow != null && witharrow}">&gt;&gt; </span>
+            <tc:content></tc:content>
+        </a>
+    </div>
+    
+    <div th:fragment="link2(href)" tc:selector="link-named">
+        <a th:href="${href}">
+            <tc:content></tc:content>
+        </a>
+    </div>
+    
+</body>
+</html>

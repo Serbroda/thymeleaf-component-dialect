@@ -1,7 +1,6 @@
 package de.morphbit.thymeleaf.helper;
 
 import java.util.List;
-
 import org.thymeleaf.context.IEngineContext;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
@@ -18,16 +17,13 @@ public class WithHelper {
 
 	}
 
-	public static void processWith(ITemplateContext context,
-	        String attributeValue,
-	        IElementModelStructureHandler structureHandler) {
-		final AssignationSequence assignations =
-		        AssignationUtils.parseAssignationSequence(context,
-		            attributeValue, false /* no parameters without value */);
+	public static void processWith(ITemplateContext context, String attributeValue,
+			IElementModelStructureHandler structureHandler, boolean registerGlobal) {
+		final AssignationSequence assignations = AssignationUtils.parseAssignationSequence(context, attributeValue,
+				false /* no parameters without value */);
 		if (assignations == null) {
 			throw new TemplateProcessingException(
-			    "Could not parse value as attribute assignations: \""
-			            + attributeValue + "\"");
+					"Could not parse value as attribute assignations: \"" + attributeValue + "\"");
 		}
 
 		// Normally we would just allow the structure handler to be in charge of
@@ -39,15 +35,10 @@ public class WithHelper {
 		// a more specific interface --which shouldn't be used directly except
 		// in this specific, special case-- and
 		// put the local variables directly into it.
-		IEngineContext engineContext = null;
-		if (context instanceof IEngineContext) {
-			// NOTE this interface is internal and should not be used in users'
-			// code
-			engineContext = (IEngineContext) context;
-		}
+		// NOTE IEngineContext is internal and should not be used in users' code
+		var engineContext = context instanceof IEngineContext ctx ? ctx : null;
 
-		final List<Assignation> assignationValues =
-		        assignations.getAssignations();
+		final List<Assignation> assignationValues = assignations.getAssignations();
 		final int assignationValuesLen = assignationValues.size();
 
 		for (int i = 0; i < assignationValuesLen; i++) {
@@ -60,23 +51,15 @@ public class WithHelper {
 			final IStandardExpression rightExpr = assignation.getRight();
 			final Object rightValue = rightExpr.execute(context);
 
-			final String newVariableName =
-			        leftValue == null ? null : leftValue.toString();
+			final String newVariableName = leftValue == null ? null : leftValue.toString();
 			if (StringUtils.isEmptyOrWhitespace(newVariableName)) {
 				throw new TemplateProcessingException(
-				    "Variable name expression evaluated as null or empty: \""
-				            + leftExpr + "\"");
+						"Variable name expression evaluated as null or empty: \"" + leftExpr + "\"");
 			}
 
-			if (engineContext != null) {
-				// The advantage of this vs. using the structure handler is that
-				// we will be able to
-				// use this newly created value in other expressions in the same
-				// 'th:with'
+			if (registerGlobal && engineContext != null) {
 				engineContext.setVariable(newVariableName, rightValue);
 			} else {
-				// The problem is, these won't be available until we execute the
-				// next processor
 				structureHandler.setLocalVariable(newVariableName, rightValue);
 			}
 

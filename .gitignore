@@ -198,17 +198,4 @@ buildNumber.properties
 # Project-level settings
 /.tgitconfig
 
-### Web ###
-*.asp
-*.cer
-*.csr
-*.css
-*.htm
-*.html
-*.js
-*.jsp
-*.php
-*.rss
-*.xhtml
-
 # End of https://www.gitignore.io/api/web,git,java,maven,eclipse,tortoisegit,intellij+all,intellij+iml

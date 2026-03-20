@@ -16,18 +16,15 @@
 
 package de.morphbit.thymeleaf.parser;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import org.attoparser.dom.Element;
-import org.thymeleaf.standard.StandardDialect;
-
 import de.morphbit.thymeleaf.dialect.ComponentDialect;
 import de.morphbit.thymeleaf.helper.ResourcePathFinder;
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
+import java.util.HashSet;
+import java.util.Set;
+import org.attoparser.dom.Element;
+import org.thymeleaf.standard.StandardDialect;
 
-public class StandardThymeleafComponentParser extends AbstractElementParser
-        implements IThymeleafComponentParser {
+public class StandardThymeleafComponentParser extends AbstractElementParser implements IThymeleafComponentParser {
 
 	protected static final String NAME_ATTRIBUTE = "selector";
 	protected static final String FRAGMENT_ATTRIBUTE = "fragment";
@@ -44,11 +41,10 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 	 * @param templateSuffix
 	 *            Template suffix (e.g. .html)
 	 * @param directory
-	 *            Subdirectory of param templatePrefix to find components in
-	 *            (e.g. components)
+	 *            Subdirectory of param templatePrefix to find components in (e.g.
+	 *            components)
 	 */
-	public StandardThymeleafComponentParser(String templatePrefix,
-	        String templateSuffix, String directory) {
+	public StandardThymeleafComponentParser(String templatePrefix, String templateSuffix, String directory) {
 		super(ComponentDialect.PREFIX);
 		this.directory = directory;
 		this.templatePrefix = templatePrefix;
@@ -59,8 +55,7 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 	public Set<ThymeleafComponent> parse() {
 		Set<ThymeleafComponent> components = new HashSet<>();
 
-		for (String file : new ResourcePathFinder(templatePrefix + directory)
-		    .findResourceFiles(true)) {
+		for (String file : new ResourcePathFinder(templatePrefix + directory).findResourceFiles()) {
 			for (Element element : parseElements(file)) {
 				if (isThymeleafComponent(element)) {
 					components.add(createComponent(element, file));
@@ -71,19 +66,15 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 		return components;
 	}
 
-	private ThymeleafComponent createComponent(Element element,
-	        String htmlFile) {
+	private ThymeleafComponent createComponent(Element element, String htmlFile) {
 		String templateFile = htmlFile;
 		templateFile = templateFile.replaceAll("^" + this.templatePrefix, "");
-		templateFile = templateFile
-		    .replaceAll(this.templateSuffix.replace(".", "\\."), "");
+		templateFile = templateFile.replaceAll(this.templateSuffix.replace(".", "\\."), "");
 
-		String frag = getDynamicAttributeValue(element, StandardDialect.PREFIX,
-		    FRAGMENT_ATTRIBUTE);
+		String frag = getDynamicAttributeValue(element, StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
 		frag = frag.replaceAll("\\(.*\\)", "");
 
-		String name = getDynamicAttributeValue(element, this.dialectPrefix,
-		    NAME_ATTRIBUTE);
+		String name = getDynamicAttributeValue(element, this.dialectPrefix, NAME_ATTRIBUTE);
 		if (name == null) {
 			name = frag;
 		}
@@ -92,20 +83,16 @@ public class StandardThymeleafComponentParser extends AbstractElementParser
 	}
 
 	private boolean isThymeleafComponent(Element element) {
-		return hasDynamicAttribute(element, StandardDialect.PREFIX,
-		    FRAGMENT_ATTRIBUTE);
+		return hasDynamicAttribute(element, StandardDialect.PREFIX, FRAGMENT_ATTRIBUTE);
 	}
 
-	private boolean hasDynamicAttribute(Element element, String prefix,
-	        String dynamicAttribute) {
+	private boolean hasDynamicAttribute(Element element, String prefix, String dynamicAttribute) {
 		return element.hasAttribute("data-" + prefix + "-" + dynamicAttribute)
-		        || element.hasAttribute(prefix + ":" + dynamicAttribute);
+				|| element.hasAttribute(prefix + ":" + dynamicAttribute);
 	}
 
-	private String getDynamicAttributeValue(Element element, String prefix,
-	        String dynamicAttribute) {
-		String value = element
-		    .getAttributeValue("data-" + prefix + "-" + dynamicAttribute);
+	private String getDynamicAttributeValue(Element element, String prefix, String dynamicAttribute) {
+		String value = element.getAttributeValue("data-" + prefix + "-" + dynamicAttribute);
 		if (value != null) {
 			return value;
 		}

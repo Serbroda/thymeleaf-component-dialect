@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect">
+<head>
+</head>
+<body>
+	
+    <div th:fragment="valid-input">
+        <label th:text="${title}"></label>
+        <input
+            type="text"
+            data-th-field="*{?[field]}"
+            class="form-control" />
+    </div>
+    
+</body>
+</html>
