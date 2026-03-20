@@ -3,19 +3,16 @@ package de.morphbit.thymeleaf.parser;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.Set;
-
-import org.junit.jupiter.api.Test;
-
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
+import java.util.Set;
+import org.junit.jupiter.api.Test;
 
 public class StandardThymeleafComponentParserTest {
 
 	@Test
 	public void testParser() {
-		final StandardThymeleafComponentParser parser =
-		        new StandardThymeleafComponentParser("templates/", ".html",
-		            "components");
+		final StandardThymeleafComponentParser parser = new StandardThymeleafComponentParser("templates/", ".html",
+				"components");
 		Set<ThymeleafComponent> components = parser.parse();
 		assertFalse(components.isEmpty());
 		assertTrue(containsComponent(components, "link"));
@@ -25,9 +22,7 @@ public class StandardThymeleafComponentParserTest {
 		assertFalse(containsComponent(components, "link_component"));
 	}
 
-	private boolean containsComponent(final Set<ThymeleafComponent> components,
-	        final String name) {
-		return components.stream()
-		    .anyMatch(c -> c.getName().equalsIgnoreCase(name));
+	private boolean containsComponent(final Set<ThymeleafComponent> components, final String name) {
+		return components.stream().anyMatch(c -> c.getName().equalsIgnoreCase(name));
 	}
 }

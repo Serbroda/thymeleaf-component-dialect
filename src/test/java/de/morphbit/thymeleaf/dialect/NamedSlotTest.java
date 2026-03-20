@@ -4,17 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
-
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 
 public class NamedSlotTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldDistributeContentToNamedSlots() {
-		String html =
-		        processThymeleafFile("named_slots.html", new Context());
+		String html = processThymeleafFile("named_slots.html", new Context());
 
 		assertNotNull(html);
 
@@ -41,8 +39,7 @@ public class NamedSlotTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldPlaceNamedSlotsInCorrectSections() {
-		String html =
-		        processThymeleafFile("named_slots.html", new Context());
+		String html = processThymeleafFile("named_slots.html", new Context());
 
 		assertNotNull(html);
 
@@ -54,20 +51,16 @@ public class NamedSlotTest extends AbstractThymeleafComponentDialectTest {
 		int bodyContentPos = html.indexOf("Main content here");
 		int footerContentPos = html.indexOf("Copyright 2026");
 
-		assertTrue(headerContentPos > headerSectionStart
-		        && headerContentPos < bodySectionStart,
-		    "Header content should be within header section");
-		assertTrue(bodyContentPos > bodySectionStart
-		        && bodyContentPos < footerSectionStart,
-		    "Body content should be within body section");
-		assertTrue(footerContentPos > footerSectionStart,
-		    "Footer content should be within footer section");
+		assertTrue(headerContentPos > headerSectionStart && headerContentPos < bodySectionStart,
+				"Header content should be within header section");
+		assertTrue(bodyContentPos > bodySectionStart && bodyContentPos < footerSectionStart,
+				"Body content should be within body section");
+		assertTrue(footerContentPos > footerSectionStart, "Footer content should be within footer section");
 	}
 
 	@Test
 	public void itShouldOverrideDefaultContentWithNamedSlot() {
-		String html = processThymeleafFile(
-		    "named_slots_default_content.html", new Context());
+		String html = processThymeleafFile("named_slots_default_content.html", new Context());
 
 		assertNotNull(html);
 
@@ -82,8 +75,7 @@ public class NamedSlotTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldUseFallbackContentWhenNoSlotProvided() {
-		String html = processThymeleafFile("named_slots_fallback.html",
-		    new Context());
+		String html = processThymeleafFile("named_slots_fallback.html", new Context());
 
 		assertNotNull(html);
 

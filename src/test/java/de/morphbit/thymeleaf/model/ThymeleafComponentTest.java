@@ -10,12 +10,10 @@ public class ThymeleafComponentTest {
 
 	@Test
 	public void itShouldStoreNameAndFragmentTemplate() {
-		ThymeleafComponent component =
-		        new ThymeleafComponent("panel", "components/panel :: panel");
+		ThymeleafComponent component = new ThymeleafComponent("panel", "components/panel :: panel");
 
 		assertEquals("panel", component.getName());
-		assertEquals("components/panel :: panel",
-		    component.getFragmentTemplate());
+		assertEquals("components/panel :: panel", component.getFragmentTemplate());
 	}
 
 	@Test
@@ -26,14 +24,12 @@ public class ThymeleafComponentTest {
 		component.setFragmentTemplate("new/template :: fragment");
 
 		assertEquals("new-name", component.getName());
-		assertEquals("new/template :: fragment",
-		    component.getFragmentTemplate());
+		assertEquals("new/template :: fragment", component.getFragmentTemplate());
 	}
 
 	@Test
 	public void itShouldHaveMeaningfulToString() {
-		ThymeleafComponent component =
-		        new ThymeleafComponent("panel", "components/panel :: panel");
+		ThymeleafComponent component = new ThymeleafComponent("panel", "components/panel :: panel");
 
 		String toString = component.toString();
 		assertNotNull(toString);

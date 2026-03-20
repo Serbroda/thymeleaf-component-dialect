@@ -3,16 +3,13 @@ package de.morphbit.thymeleaf.dialect;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import java.util.Collections;
 import java.util.Locale;
-
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
-
-public class AttributeReplaceTest
-        extends AbstractThymeleafComponentDialectTest {
+public class AttributeReplaceTest extends AbstractThymeleafComponentDialectTest {
 
 	private static final String FILE = "repl_test.html";
 
@@ -36,8 +33,8 @@ public class AttributeReplaceTest
 
 	@Test
 	public void itShouldReplaceAllReplAttributes() {
-		String html = processThymeleafFile(FILE, new Context(Locale.ENGLISH,
-		    Collections.singletonMap("user", new User("John"))));
+		String html = processThymeleafFile(FILE,
+				new Context(Locale.ENGLISH, Collections.singletonMap("user", new User("John"))));
 
 		assertNotNull(html);
 		assertFalse(html.matches(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*"));

@@ -4,13 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
-
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 
 public class OnceAttributeTest extends AbstractThymeleafComponentDialectTest {
 
@@ -21,9 +19,7 @@ public class OnceAttributeTest extends AbstractThymeleafComponentDialectTest {
 		String html = processThymeleafFile(FILE, new Context());
 
 		assertNotNull(html);
-		assertTrue(countMatches(
-		    "\\<button onclick\\=\\\"onceFunction\\(\\)\\\"\\>Once Button\\</button\\>",
-		    html) > 1);
+		assertTrue(countMatches("\\<button onclick\\=\\\"onceFunction\\(\\)\\\"\\>Once Button\\</button\\>", html) > 1);
 		assertEquals(1, countMatches("function onceFunction()", html));
 	}
 

@@ -1,13 +1,12 @@
 package de.morphbit.thymeleaf.base;
 
+import de.morphbit.thymeleaf.dialect.ComponentDialect;
+import de.morphbit.thymeleaf.parser.StandardThymeleafComponentParser;
 import org.junit.jupiter.api.BeforeAll;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import de.morphbit.thymeleaf.dialect.ComponentDialect;
-import de.morphbit.thymeleaf.parser.StandardThymeleafComponentParser;
 
 public abstract class AbstractThymeleafComponentDialectTest {
 
@@ -25,8 +24,7 @@ public abstract class AbstractThymeleafComponentDialectTest {
 	}
 
 	private static void setupThymeleaf() {
-		ClassLoaderTemplateResolver templateResolver =
-		        new ClassLoaderTemplateResolver();
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
 		templateResolver.setCacheable(false);
 		templateResolver.setCharacterEncoding("UTF-8");
 		templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -35,9 +33,8 @@ public abstract class AbstractThymeleafComponentDialectTest {
 		templateEngine = new TemplateEngine();
 		templateEngine.setTemplateResolver(templateResolver);
 		final ComponentDialect dialect = new ComponentDialect();
-		final StandardThymeleafComponentParser parser =
-		        new StandardThymeleafComponentParser("", ".html",
-		            "templates/components");
+		final StandardThymeleafComponentParser parser = new StandardThymeleafComponentParser("", ".html",
+				"templates/components");
 		dialect.addParser(parser);
 		templateEngine.addDialect(dialect.getPrefix(), dialect);
 	}

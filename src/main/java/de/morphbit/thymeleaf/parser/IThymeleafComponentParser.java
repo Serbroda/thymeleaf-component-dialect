@@ -16,9 +16,8 @@
 
 package de.morphbit.thymeleaf.parser;
 
-import java.util.Set;
-
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
+import java.util.Set;
 
 public interface IThymeleafComponentParser {
 

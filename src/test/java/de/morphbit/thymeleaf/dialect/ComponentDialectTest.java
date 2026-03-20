@@ -5,17 +5,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.model.ThymeleafComponent;
 import java.util.HashSet;
 import java.util.Set;
-
 import org.junit.jupiter.api.Test;
+import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.processor.IProcessor;
-import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
-import de.morphbit.thymeleaf.model.ThymeleafComponent;
 
 public class ComponentDialectTest {
 
@@ -29,8 +27,7 @@ public class ComponentDialectTest {
 	@Test
 	public void itShouldRegisterManualComponents() {
 		Set<ThymeleafComponent> components = new HashSet<>();
-		components.add(
-		    new ThymeleafComponent("my-comp", "templates/test :: fragment"));
+		components.add(new ThymeleafComponent("my-comp", "templates/test :: fragment"));
 
 		ComponentDialect dialect = new ComponentDialect(components);
 		Set<IProcessor> processors = dialect.getProcessors("tc");
@@ -41,8 +38,7 @@ public class ComponentDialectTest {
 
 	@Test
 	public void itShouldWorkWithManuallyRegisteredComponent() {
-		ClassLoaderTemplateResolver templateResolver =
-		        new ClassLoaderTemplateResolver();
+		ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
 		templateResolver.setCacheable(false);
 		templateResolver.setCharacterEncoding("UTF-8");
 		templateResolver.setTemplateMode(TemplateMode.HTML);
@@ -52,14 +48,12 @@ public class ComponentDialectTest {
 		engine.setTemplateResolver(templateResolver);
 
 		Set<ThymeleafComponent> components = new HashSet<>();
-		components.add(new ThymeleafComponent("link",
-		    "templates/components/link_component :: link"));
+		components.add(new ThymeleafComponent("link", "templates/components/link_component :: link"));
 
 		ComponentDialect dialect = new ComponentDialect(components);
 		engine.addDialect(dialect.getPrefix(), dialect);
 
-		String html = engine.process("templates/link_with_content",
-		    new Context());
+		String html = engine.process("templates/link_with_content", new Context());
 
 		assertNotNull(html);
 		assertFalse(html.contains("tc:link"));

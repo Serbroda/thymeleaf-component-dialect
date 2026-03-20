@@ -3,7 +3,7 @@ Thymeleaf Component Dialect
 
 [![CI](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml)
 [![jitpack](https://jitpack.io/v/Serbroda/thymeleaf-component-dialect.svg)](https://jitpack.io/#Serbroda/thymeleaf-component-dialect)
-[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/develop/LICENSE.txt)
+[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/main/LICENSE.txt)
 
 A dialect for creating reusable Thymeleaf components, similar to React or Vue components.
 
@@ -69,13 +69,13 @@ Thymeleaf components uses the standard `th:fragment` attribute to register compo
 
 ### Use the component
 
-Add the namespace `xmlns:tc="http://www.morphbit.com/thymeleaf/component"` and use the component in your application.
+Add the namespace `xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect"` and use the component in your application.
 
 ```html
 <!DOCTYPE html>
 <html 
     xmlns:th="http://www.thymeleaf.org" 
-    xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+    xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect">
 <head>
 </head>
 <body>
@@ -95,10 +95,35 @@ Add the namespace `xmlns:tc="http://www.morphbit.com/thymeleaf/component"` and u
         <b>A title</b>
     </div>
     <div class="panel-body">
-        
         <h1>Hello world</h1>
         <p>This is my first thymeleaf component</p>
-    
     </div>
 </div>
 ```
+
+### The `tc:once` Attribute
+
+Use `tc:once` to ensure an element (e.g. a script tag) is only rendered once, even if the component is used multiple times on the same page:
+
+```html
+<div th:fragment="my-widget">
+    <button>Click me</button>
+    <script tc:once="my-widget-script">
+        // This script will only be included once
+    </script>
+</div>
+```
+
+Contributing
+------
+
+Contributions are welcome! Feel free to open an [issue](https://github.com/Serbroda/thymeleaf-component-dialect/issues) or submit a [pull request](https://github.com/Serbroda/thymeleaf-component-dialect/pulls).
+
+Before submitting a PR, please make sure:
+- All tests pass: `./mvnw clean verify`
+- Code is formatted: `./mvnw spotless:apply`
+
+License
+------
+
+This project is licensed under the [Apache License, Version 2.0](LICENSE.txt).

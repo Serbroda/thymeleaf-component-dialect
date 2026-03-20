@@ -16,6 +16,7 @@
 
 package de.morphbit.thymeleaf.helper;
 
+import de.morphbit.thymeleaf.exception.ComponentDialectException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,18 +28,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ResourcePathFinder {
-
-	private static final Logger LOG =
-	        LoggerFactory.getLogger(ResourcePathFinder.class);
 
 	private final String directory;
 	private final ClassLoader loader;
@@ -78,8 +73,7 @@ public class ResourcePathFinder {
 				if ("jar".equals(uri.getScheme())) {
 					FileSystem fileSystem;
 					try {
-						fileSystem = FileSystems.newFileSystem(uri,
-						    Collections.emptyMap());
+						fileSystem = FileSystems.newFileSystem(uri, Map.of());
 					} catch (FileSystemAlreadyExistsException e) {
 						fileSystem = FileSystems.getFileSystem(uri);
 					}
@@ -90,15 +84,13 @@ public class ResourcePathFinder {
 
 				try (Stream<Path> walk = Files.walk(path)) {
 					walk.filter(Files::isRegularFile).forEach(p -> {
-						String relativePath =
-						    dir + "/" + path.relativize(p).toString();
+						String relativePath = dir + "/" + path.relativize(p).toString();
 						files.add(relativePath);
 					});
 				}
 			}
 		} catch (IOException | URISyntaxException ex) {
-			LOG.error("Could not process resource pattern. {}", ex.getMessage(),
-			    ex);
+			throw new ComponentDialectException("Could not find resource files in directory: " + dir, ex);
 		}
 
 		return files;

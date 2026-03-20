@@ -4,17 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
-
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 
 public class NamedSelectorTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldResolveComponentByNamedSelector() {
-		String html =
-		        processThymeleafFile("named_selector.html", new Context());
+		String html = processThymeleafFile("named_selector.html", new Context());
 
 		assertNotNull(html);
 		assertFalse(html.contains("tc:link-named"));
