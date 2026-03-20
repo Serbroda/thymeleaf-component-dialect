@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+<head>
+</head>
+<body>
+
+    <div th:fragment="page-layout" class="layout">
+        <header class="header">
+            <tc:content name="header"></tc:content>
+        </header>
+        <main class="body">
+            <tc:content></tc:content>
+        </main>
+        <footer class="footer">
+            <tc:content name="footer"></tc:content>
+        </footer>
+    </div>
+
+    <div th:fragment="card-with-defaults" class="card">
+        <div class="card-header">
+            <tc:content name="header">Default Header</tc:content>
+        </div>
+        <div class="card-body">
+            <tc:content>Default Body</tc:content>
+        </div>
+    </div>
+
+</body>
+</html>
