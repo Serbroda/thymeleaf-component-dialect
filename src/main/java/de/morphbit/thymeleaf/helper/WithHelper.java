@@ -69,23 +69,11 @@ public class WithHelper {
 				            + leftExpr + "\"");
 			}
 
-			if(registerGlobal && engineContext != null) {
+			if (registerGlobal && engineContext != null) {
 				engineContext.setVariable(newVariableName, rightValue);
 			} else {
 				structureHandler.setLocalVariable(newVariableName, rightValue);
 			}
-
-			/*if (engineContext != null) {
-				// The advantage of this vs. using the structure handler is that
-				// we will be able to
-				// use this newly created value in other expressions in the same
-				// 'th:with'
-				engineContext.setVariable(newVariableName, rightValue);
-			} else {
-				// The problem is, these won't be available until we execute the
-				// next processor
-				structureHandler.setLocalVariable(newVariableName, rightValue);
-			}*/
 
 		}
 	}

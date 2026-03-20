@@ -69,13 +69,13 @@ Thymeleaf components uses the standard `th:fragment` attribute to register compo
 
 ### Use the component
 
-Add the namespace `xmlns:tc="http://www.morphbit.com/thymeleaf/component"` and use the component in your application.
+Add the namespace `xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect"` and use the component in your application.
 
 ```html
 <!DOCTYPE html>
 <html 
     xmlns:th="http://www.thymeleaf.org" 
-    xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+    xmlns:tc="https://github.com/Serbroda/thymeleaf-component-dialect">
 <head>
 </head>
 <body>
@@ -95,10 +95,21 @@ Add the namespace `xmlns:tc="http://www.morphbit.com/thymeleaf/component"` and u
         <b>A title</b>
     </div>
     <div class="panel-body">
-        
         <h1>Hello world</h1>
         <p>This is my first thymeleaf component</p>
-    
     </div>
+</div>
+```
+
+### The `tc:once` Attribute
+
+Use `tc:once` to ensure an element (e.g. a script tag) is only rendered once, even if the component is used multiple times on the same page:
+
+```html
+<div th:fragment="my-widget">
+    <button>Click me</button>
+    <script tc:once="my-widget-script">
+        // This script will only be included once
+    </script>
 </div>
 ```
