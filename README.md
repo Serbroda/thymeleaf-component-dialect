@@ -1,21 +1,24 @@
 Thymeleaf Component Dialect
 ===========================
 
-[![Build Status](https://travis-ci.org/Serbroda/thymeleaf-component-dialect.svg?branch=develop)](https://travis-ci.org/Serbroda/thymeleaf-component-dialect)
+[![CI](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml)
 [![jitpack](https://jitpack.io/v/Serbroda/thymeleaf-component-dialect.svg)](https://jitpack.io/#Serbroda/thymeleaf-component-dialect)
-[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/master/LICENSE.txt)
-[![Sonarcloud Status](https://sonarcloud.io/api/project_badges/measure?project=de.morphbit:thymeleaf-component-dialect:develop&metric=alert_status)](https://sonarcloud.io/dashboard?id=de.morphbit:thymeleaf-component-dialect:develop)
+[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/develop/LICENSE.txt)
 
+A dialect for creating reusable Thymeleaf components, similar to React or Vue components.
 
+Requirements
+------
 
-A dialect for creating reusable thymeleaf components.
+- Java 17+
+- Thymeleaf 3.1+
 
 Installation
 ------
 
 Add the jitpack repository.
 
-```html
+```xml
 <repositories>
     <repository>
         <id>jitpack.io</id>
@@ -26,7 +29,7 @@ Add the jitpack repository.
 
 Add the dependency (for all available versions see [https://jitpack.io/#Serbroda/thymeleaf-component-dialect](https://jitpack.io/#Serbroda/thymeleaf-component-dialect)).
 
-```html
+```xml
 <dependency>
     <groupId>com.github.Serbroda</groupId>
     <artifactId>thymeleaf-component-dialect</artifactId>
@@ -48,8 +51,6 @@ public ComponentDialect componentDialect() {
 
 Usage
 -----
-
-For detailed configurations have a look at the [demo project](https://github.com/Serbroda/thymeleaf-component-dialect-demo).
 
 ### Create a thymeleaf component
 

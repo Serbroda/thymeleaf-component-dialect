@@ -1,9 +1,10 @@
 package de.morphbit.thymeleaf.dialect;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
 import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
@@ -21,11 +22,11 @@ public class ContentReplaceTest extends AbstractThymeleafComponentDialectTest {
 		        processThymeleafFile(FILE_LINK_WITH_CONTENT, new Context());
 
 		assertNotNull(html);
-		assertTrue(!html.contains("tc:link"));
-		assertTrue(!html.contains("tc:content"));
+		assertFalse(html.contains("tc:link"));
+		assertFalse(html.contains("tc:content"));
 		assertTrue(html.contains("<a href=\"http://www.test.com\">"));
 		assertTrue(html.contains("<span>Test</span>"));
-		assertTrue(!html.contains("<span>&gt;&gt; </span>"));
+		assertFalse(html.contains("<span>&gt;&gt; </span>"));
 	}
 
 	@Test

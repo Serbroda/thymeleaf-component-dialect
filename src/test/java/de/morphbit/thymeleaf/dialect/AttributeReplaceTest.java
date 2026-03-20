@@ -1,12 +1,12 @@
 package de.morphbit.thymeleaf.dialect;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.Collections;
 import java.util.Locale;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
 import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
@@ -40,7 +40,7 @@ public class AttributeReplaceTest
 		    Collections.singletonMap("user", new User("John"))));
 
 		assertNotNull(html);
-		assertTrue(!html.matches(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*"));
+		assertFalse(html.matches(".*\\?\\[([\\w|\\d|.|\\-|_]*)\\].*"));
 	}
 
 }

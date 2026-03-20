@@ -1,10 +1,11 @@
 package de.morphbit.thymeleaf.parser;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
 
@@ -16,26 +17,17 @@ public class StandardThymeleafComponentParserTest {
 		        new StandardThymeleafComponentParser("templates/", ".html",
 		            "components");
 		Set<ThymeleafComponent> components = parser.parse();
-		assertTrue(!components.isEmpty());
+		assertFalse(components.isEmpty());
 		assertTrue(containsComponent(components, "link"));
 		assertTrue(containsComponent(components, "link-named"));
-		assertTrue(notContainsComponent(components, "link2"));
-		assertTrue(notContainsComponent(components, "no_component"));
-		assertTrue(notContainsComponent(components, "link_component"));
+		assertFalse(containsComponent(components, "link2"));
+		assertFalse(containsComponent(components, "no_component"));
+		assertFalse(containsComponent(components, "link_component"));
 	}
 
 	private boolean containsComponent(final Set<ThymeleafComponent> components,
 	        final String name) {
-		for (ThymeleafComponent component : components) {
-			if (component.getName().equalsIgnoreCase(name)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private boolean notContainsComponent(
-	        final Set<ThymeleafComponent> components, final String name) {
-		return !containsComponent(components, name);
+		return components.stream()
+		    .anyMatch(c -> c.getName().equalsIgnoreCase(name));
 	}
 }

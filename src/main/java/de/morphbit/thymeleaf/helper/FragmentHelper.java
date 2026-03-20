@@ -18,7 +18,6 @@ import org.thymeleaf.standard.expression.FragmentSignature;
 import org.thymeleaf.standard.expression.FragmentSignatureUtils;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.NoOpToken;
-import org.thymeleaf.standard.expression.StandardExpressionExecutionContext;
 import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.util.EscapedAttributeUtils;
 import org.thymeleaf.util.StringUtils;
@@ -160,8 +159,7 @@ public class FragmentHelper {
 
 		final FragmentExpression.ExecutedFragmentExpression executedFragmentExpression =
 		        FragmentExpression.createExecutedFragmentExpression(context,
-		            fragmentExpression,
-		            StandardExpressionExecutionContext.NORMAL);
+		            fragmentExpression);
 
 		if (executedFragmentExpression
 		    .getFragmentSelectorExpressionResult() == null

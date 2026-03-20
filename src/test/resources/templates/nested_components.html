@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:tc="http://www.morphbit.com/thymeleaf/component">
+<head>
+    <title>Test</title>
+</head>
+<body>
+
+    <tc:card title="'Outer Card'">
+        <tc:alert tc:constructor="'info', 'Nested Alert'">
+            <span>Nested content</span>
+        </tc:alert>
+    </tc:card>
+
+</body>
+</html>

@@ -1,12 +1,13 @@
 package de.morphbit.thymeleaf.dialect;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
 import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
@@ -23,7 +24,7 @@ public class OnceAttributeTest extends AbstractThymeleafComponentDialectTest {
 		assertTrue(countMatches(
 		    "\\<button onclick\\=\\\"onceFunction\\(\\)\\\"\\>Once Button\\</button\\>",
 		    html) > 1);
-		assertTrue(countMatches("function onceFunction()", html) == 1);
+		assertEquals(1, countMatches("function onceFunction()", html));
 	}
 
 	private int countMatches(String regex, String search) {

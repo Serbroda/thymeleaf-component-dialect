@@ -17,14 +17,23 @@
 package de.morphbit.thymeleaf.helper;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystemAlreadyExistsException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class ResourcePathFinder {
 
@@ -50,7 +59,7 @@ public class ResourcePathFinder {
 	 * Searches for resource files
 	 *
 	 * Search files recursively
-	 * 
+	 *
 	 * @return List of files as strings
 	 */
 	public List<String> findResourceFiles() {
@@ -60,20 +69,36 @@ public class ResourcePathFinder {
 	private List<String> getResourceFiles(String dir) {
 		List<String> files = new ArrayList<>();
 		try {
-			ResourcePatternResolver resolver =
-			        new PathMatchingResourcePatternResolver(loader);
-			Resource[] resources =
-			        resolver.getResources("classpath*:/" + dir + "/**/*.*");
-			String basePath = loader.getResource(dir).getPath();
-			for (Resource resource : resources) {
+			Enumeration<URL> resources = loader.getResources(dir);
+			while (resources.hasMoreElements()) {
+				URL resourceUrl = resources.nextElement();
+				URI uri = resourceUrl.toURI();
 
-				String pathRelativeToDir = dir + "/" + resource.getURL()
-				    .getPath().replace(basePath + "/", "");
-				files.add(pathRelativeToDir);
+				Path path;
+				if ("jar".equals(uri.getScheme())) {
+					FileSystem fileSystem;
+					try {
+						fileSystem = FileSystems.newFileSystem(uri,
+						    Collections.emptyMap());
+					} catch (FileSystemAlreadyExistsException e) {
+						fileSystem = FileSystems.getFileSystem(uri);
+					}
+					path = fileSystem.getPath(dir);
+				} else {
+					path = Paths.get(uri);
+				}
+
+				try (Stream<Path> walk = Files.walk(path)) {
+					walk.filter(Files::isRegularFile).forEach(p -> {
+						String relativePath =
+						    dir + "/" + path.relativize(p).toString();
+						files.add(relativePath);
+					});
+				}
 			}
-
-		} catch (IOException ex) {
-			LOG.error("Could not process resource pattern. {}", ex);
+		} catch (IOException | URISyntaxException ex) {
+			LOG.error("Could not process resource pattern. {}", ex.getMessage(),
+			    ex);
 		}
 
 		return files;

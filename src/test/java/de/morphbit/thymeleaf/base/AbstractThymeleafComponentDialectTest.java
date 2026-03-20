@@ -1,6 +1,6 @@
 package de.morphbit.thymeleaf.base;
 
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
@@ -15,7 +15,7 @@ public abstract class AbstractThymeleafComponentDialectTest {
 
 	private static TemplateEngine templateEngine;
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeClass() {
 		setupThymeleaf();
 	}
