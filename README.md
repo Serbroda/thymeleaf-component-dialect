@@ -113,3 +113,17 @@ Use `tc:once` to ensure an element (e.g. a script tag) is only rendered once, ev
     </script>
 </div>
 ```
+
+Contributing
+------
+
+Contributions are welcome! Feel free to open an [issue](https://github.com/Serbroda/thymeleaf-component-dialect/issues) or submit a [pull request](https://github.com/Serbroda/thymeleaf-component-dialect/pulls).
+
+Before submitting a PR, please make sure:
+- All tests pass: `./mvnw clean verify`
+- Code is formatted: `./mvnw spotless:apply`
+
+License
+------
+
+This project is licensed under the [Apache License, Version 2.0](LICENSE.txt).
