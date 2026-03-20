@@ -16,6 +16,7 @@
 
 package de.morphbit.thymeleaf.parser;
 
+import de.morphbit.thymeleaf.exception.ComponentDialectException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,12 +28,8 @@ import org.attoparser.MarkupParser;
 import org.attoparser.ParseException;
 import org.attoparser.config.ParseConfiguration;
 import org.attoparser.dom.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class AbstractElementParser extends AbstractMarkupHandler {
-
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractElementParser.class);
 
 	protected final String dialectPrefix;
 
@@ -55,7 +52,7 @@ public abstract class AbstractElementParser extends AbstractMarkupHandler {
 			var htmlStandardParser = new MarkupParser(config);
 			htmlStandardParser.parse(reader, this);
 		} catch (IOException | ParseException e) {
-			LOG.error("Error while parsing elements", e);
+			throw new ComponentDialectException("Error while parsing elements", e);
 		}
 
 		return this.elements;

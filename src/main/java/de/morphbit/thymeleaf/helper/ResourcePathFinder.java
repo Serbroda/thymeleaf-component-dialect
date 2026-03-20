@@ -16,6 +16,7 @@
 
 package de.morphbit.thymeleaf.helper;
 
+import de.morphbit.thymeleaf.exception.ComponentDialectException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,12 +32,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ResourcePathFinder {
-
-	private static final Logger LOG = LoggerFactory.getLogger(ResourcePathFinder.class);
 
 	private final String directory;
 	private final ClassLoader loader;
@@ -93,7 +90,7 @@ public class ResourcePathFinder {
 				}
 			}
 		} catch (IOException | URISyntaxException ex) {
-			LOG.error("Could not process resource pattern", ex);
+			throw new ComponentDialectException("Could not find resource files in directory: " + dir, ex);
 		}
 
 		return files;
