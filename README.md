@@ -3,7 +3,7 @@ Thymeleaf Component Dialect
 
 [![CI](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml/badge.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/actions/workflows/ci.yml)
 [![jitpack](https://jitpack.io/v/Serbroda/thymeleaf-component-dialect.svg)](https://jitpack.io/#Serbroda/thymeleaf-component-dialect)
-[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/develop/LICENSE.txt)
+[![license](https://img.shields.io/github/license/Serbroda/thymeleaf-component-dialect.svg)](https://github.com/Serbroda/thymeleaf-component-dialect/blob/main/LICENSE.txt)
 
 A dialect for creating reusable Thymeleaf components, similar to React or Vue components.
 
