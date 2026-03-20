@@ -4,21 +4,17 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
-
-public class MultipleComponentsTest
-        extends AbstractThymeleafComponentDialectTest {
+public class MultipleComponentsTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldRenderMultipleComponentsOnSamePage() {
-		String html = processThymeleafFile("multiple_components.html",
-		    new Context());
+		String html = processThymeleafFile("multiple_components.html", new Context());
 
 		assertNotNull(html);
 		assertFalse(html.contains("tc:alert"));
@@ -38,8 +34,7 @@ public class MultipleComponentsTest
 
 	@Test
 	public void itShouldRenderCorrectAlertTypes() {
-		String html = processThymeleafFile("multiple_components.html",
-		    new Context());
+		String html = processThymeleafFile("multiple_components.html", new Context());
 
 		assertNotNull(html);
 		assertTrue(html.contains("alert-success"));
@@ -48,13 +43,11 @@ public class MultipleComponentsTest
 
 	@Test
 	public void itShouldRenderCorrectNumberOfAlerts() {
-		String html = processThymeleafFile("multiple_components.html",
-		    new Context());
+		String html = processThymeleafFile("multiple_components.html", new Context());
 
 		assertNotNull(html);
 		int alertCount = countMatches("class=\"alert", html);
-		assertTrue(alertCount == 2,
-		    "Expected 2 alerts but found " + alertCount);
+		assertTrue(alertCount == 2, "Expected 2 alerts but found " + alertCount);
 	}
 
 	private int countMatches(String text, String search) {

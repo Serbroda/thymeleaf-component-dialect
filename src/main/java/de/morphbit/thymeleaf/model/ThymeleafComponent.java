@@ -69,8 +69,7 @@ public class ThymeleafComponent {
 
 	@Override
 	public String toString() {
-		return "Component [name=" + name + ", fragmentTemplate="
-		        + fragmentTemplate + "]";
+		return "Component [name=" + name + ", fragmentTemplate=" + fragmentTemplate + "]";
 	}
 
 }

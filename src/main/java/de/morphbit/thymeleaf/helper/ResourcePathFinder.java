@@ -31,14 +31,12 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.stream.Stream;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ResourcePathFinder {
 
-	private static final Logger LOG =
-	        LoggerFactory.getLogger(ResourcePathFinder.class);
+	private static final Logger LOG = LoggerFactory.getLogger(ResourcePathFinder.class);
 
 	private final String directory;
 	private final ClassLoader loader;
@@ -78,8 +76,7 @@ public class ResourcePathFinder {
 				if ("jar".equals(uri.getScheme())) {
 					FileSystem fileSystem;
 					try {
-						fileSystem = FileSystems.newFileSystem(uri,
-						    Collections.emptyMap());
+						fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap());
 					} catch (FileSystemAlreadyExistsException e) {
 						fileSystem = FileSystems.getFileSystem(uri);
 					}
@@ -90,15 +87,13 @@ public class ResourcePathFinder {
 
 				try (Stream<Path> walk = Files.walk(path)) {
 					walk.filter(Files::isRegularFile).forEach(p -> {
-						String relativePath =
-						    dir + "/" + path.relativize(p).toString();
+						String relativePath = dir + "/" + path.relativize(p).toString();
 						files.add(relativePath);
 					});
 				}
 			}
 		} catch (IOException | URISyntaxException ex) {
-			LOG.error("Could not process resource pattern. {}", ex.getMessage(),
-			    ex);
+			LOG.error("Could not process resource pattern. {}", ex.getMessage(), ex);
 		}
 
 		return files;

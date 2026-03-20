@@ -1,7 +1,6 @@
 package de.morphbit.thymeleaf.helper;
 
 import java.util.List;
-
 import org.thymeleaf.context.IEngineContext;
 import org.thymeleaf.context.ITemplateContext;
 import org.thymeleaf.exceptions.TemplateProcessingException;
@@ -18,18 +17,14 @@ public class WithHelper {
 
 	}
 
-	public static void processWith(ITemplateContext context,
-	        String attributeValue,
-	        IElementModelStructureHandler structureHandler, boolean registerGlobal) {
-		final AssignationSequence assignations =
-		        AssignationUtils.parseAssignationSequence(context,
-		            attributeValue, false /* no parameters without value */);
+	public static void processWith(ITemplateContext context, String attributeValue,
+			IElementModelStructureHandler structureHandler, boolean registerGlobal) {
+		final AssignationSequence assignations = AssignationUtils.parseAssignationSequence(context, attributeValue,
+				false /* no parameters without value */);
 		if (assignations == null) {
 			throw new TemplateProcessingException(
-			    "Could not parse value as attribute assignations: \""
-			            + attributeValue + "\"");
+					"Could not parse value as attribute assignations: \"" + attributeValue + "\"");
 		}
-
 
 		// Normally we would just allow the structure handler to be in charge of
 		// declaring the local variables
@@ -47,8 +42,7 @@ public class WithHelper {
 			engineContext = (IEngineContext) context;
 		}
 
-		final List<Assignation> assignationValues =
-		        assignations.getAssignations();
+		final List<Assignation> assignationValues = assignations.getAssignations();
 		final int assignationValuesLen = assignationValues.size();
 
 		for (int i = 0; i < assignationValuesLen; i++) {
@@ -61,12 +55,10 @@ public class WithHelper {
 			final IStandardExpression rightExpr = assignation.getRight();
 			final Object rightValue = rightExpr.execute(context);
 
-			final String newVariableName =
-			        leftValue == null ? null : leftValue.toString();
+			final String newVariableName = leftValue == null ? null : leftValue.toString();
 			if (StringUtils.isEmptyOrWhitespace(newVariableName)) {
 				throw new TemplateProcessingException(
-				    "Variable name expression evaluated as null or empty: \""
-				            + leftExpr + "\"");
+						"Variable name expression evaluated as null or empty: \"" + leftExpr + "\"");
 			}
 
 			if (registerGlobal && engineContext != null) {

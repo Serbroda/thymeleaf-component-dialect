@@ -4,22 +4,18 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
 import org.junit.jupiter.api.Test;
 import org.thymeleaf.context.Context;
 
-import de.morphbit.thymeleaf.base.AbstractThymeleafComponentDialectTest;
-
 public class ContentReplaceTest extends AbstractThymeleafComponentDialectTest {
 
-	private static final String FILE_LINK_WITH_CONTENT =
-	        "link_with_content.html";
-	private static final String FILE_LINK_WITH_CONTENT_AND_VARIABLE =
-	        "link_with_content_and_variable.html";
+	private static final String FILE_LINK_WITH_CONTENT = "link_with_content.html";
+	private static final String FILE_LINK_WITH_CONTENT_AND_VARIABLE = "link_with_content_and_variable.html";
 
 	@Test
 	public void itShouldNotRenderNamespaceTagsAndReplaceContent() {
-		String html =
-		        processThymeleafFile(FILE_LINK_WITH_CONTENT, new Context());
+		String html = processThymeleafFile(FILE_LINK_WITH_CONTENT, new Context());
 
 		assertNotNull(html);
 		assertFalse(html.contains("tc:link"));
@@ -31,8 +27,7 @@ public class ContentReplaceTest extends AbstractThymeleafComponentDialectTest {
 
 	@Test
 	public void itShouldReplaceContentAndConsiderVariable() {
-		String html = processThymeleafFile(FILE_LINK_WITH_CONTENT_AND_VARIABLE,
-		    new Context());
+		String html = processThymeleafFile(FILE_LINK_WITH_CONTENT_AND_VARIABLE, new Context());
 
 		assertNotNull(html);
 		assertTrue(html.contains("<a href=\"http://www.test.com\">"));

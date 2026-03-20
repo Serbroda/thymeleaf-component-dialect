@@ -16,18 +16,16 @@
 
 package de.morphbit.thymeleaf.dialect;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.thymeleaf.dialect.AbstractProcessorDialect;
-import org.thymeleaf.processor.IProcessor;
-
 import de.morphbit.thymeleaf.model.ThymeleafComponent;
 import de.morphbit.thymeleaf.parser.IThymeleafComponentParser;
 import de.morphbit.thymeleaf.processor.ComponentNamedElementProcessor;
 import de.morphbit.thymeleaf.processor.OnceAttributeTagProcessor;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import org.thymeleaf.dialect.AbstractProcessorDialect;
+import org.thymeleaf.processor.IProcessor;
 
 /**
  * A dialect for creating reusable composite components with thymeleaf
@@ -73,14 +71,14 @@ public class ComponentDialect extends AbstractProcessorDialect {
 
 		if (this.components != null) {
 			for (ThymeleafComponent comp : this.components) {
-				processors.add(new ComponentNamedElementProcessor(dialectPrefix,
-				    comp.getName(), comp.getFragmentTemplate()));
+				processors.add(
+						new ComponentNamedElementProcessor(dialectPrefix, comp.getName(), comp.getFragmentTemplate()));
 			}
 		}
 
 		for (ThymeleafComponent comp : parseComponents()) {
-			processors.add(new ComponentNamedElementProcessor(dialectPrefix,
-			    comp.getName(), comp.getFragmentTemplate()));
+			processors
+					.add(new ComponentNamedElementProcessor(dialectPrefix, comp.getName(), comp.getFragmentTemplate()));
 		}
 
 		return processors;
