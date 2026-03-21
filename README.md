@@ -50,10 +50,17 @@ public ComponentDialect componentDialect() {
 }
 ```
 
-**Without Spring Boot:** Register the dialect manually with your `TemplateEngine`.
+**Without Spring Boot:** Register the dialect manually with your `TemplateEngine` (see [Getting Started](docs/getting-started.md)).
 
 Usage
 -----
+
+For full documentation, see the [docs](docs/) folder:
+
+- [Getting Started](docs/getting-started.md) - Installation and setup
+- [Components](docs/components.md) - Defining and using components
+- [Named Slots](docs/named-slots.md) - Multi-slot content projection
+- [tc:once Attribute](docs/once-attribute.md) - Deduplicate scripts and styles
 
 ### Create a thymeleaf component
 
