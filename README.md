@@ -55,7 +55,7 @@ public ComponentDialect componentDialect() {
 Usage
 -----
 
-For full documentation, see the [docs](docs/) folder:
+For full documentation, see the [docs](docs/index.md) folder:
 
 - [Getting Started](docs/getting-started.md) - Installation and setup
 - [Components](docs/components.md) - Defining and using components
