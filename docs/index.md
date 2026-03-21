@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../assets/logo.png" alt="Thymeleaf Component Dialect" width="120">
+</p>
+
 # Thymeleaf Component Dialect
 
 A Thymeleaf dialect for creating reusable UI components, similar to React or Vue components.
